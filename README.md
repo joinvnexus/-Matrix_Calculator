@@ -1,24 +1,136 @@
-# matrix-calculator
+# Matrix Calculator
 
-## Project setup
-```
-npm install
-```
+![Matrix Calculator Screenshot](./screenshot.png)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+A comprehensive matrix calculator built with Vue.js and Math.js that performs various matrix operations, solves linear equations, and decomposes matrices.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+---
 
-### Lints and fixes files
-```
-npm run lint
-```
+## 🚀 Features
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 🧮 Matrix Operations
+- Addition, subtraction, multiplication
+- Determinant calculation
+- Adjustable matrix size (1×1 to 10×10)
+
+### 📐 Linear Algebra
+- Solve systems of linear equations (Ax = b)
+- Eigenvalue computation
+- Vector input support
+
+### 🔍 Matrix Decomposition
+- LU decomposition
+- QR decomposition
+
+### 💾 Data Management
+- Save and load matrices
+- Responsive design for all devices
+
+---
+
+## 🛠 Technologies Used
+
+| Technology     | Description                          |
+|----------------|--------------------------------------|
+| [Vue.js](https://vuejs.org/)       | Progressive JavaScript framework |
+| [Math.js](https://mathjs.org/)     | Extensive math library           |
+| [Font Awesome](https://fontawesome.com/) | Icon library                   |
+| CSS (Flexbox & Grid) | Modern layout and styling         |
+
+---
+
+## 📦 Installation & Cloning
+
+No installation required — it's a client-side app that runs directly in your browser.
+
+### How to Clone This Repository
+
+```bash
+git clone https://github.com/yourusername/matrix-calculator.git
+cd matrix-calculator
+```
+## 🛠️ Project Setup
+
+If you want to run the Matrix Calculator as a Vue.js project (with source code editing, hot reload, etc):
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/matrix-calculator.git
+   cd matrix-calculator
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. Open the local URL (usually `http://localhost:5173/` or shown in your terminal) in your browser.
+
+## 🧑‍💻 Usage
+
+1. Set matrix size using the number input
+2. Enter values for Matrix A and Matrix B
+3. Click the desired operation button
+4. View results in the output section
+
+### 🔧 Operation Types
+
+- **Basic**: Determinant, addition, subtraction, multiplication  
+- **Linear Algebra**: Equation solving, eigenvalues  
+- **Decomposition**: LU, QR  
+- **Persistence**: Save/load matrices between sessions
+
+---
+
+## 📸 Screenshots
+
+![Basic Operations](./screenshots/operations.png)  
+*Basic matrix operations*
+
+![Linear Algebra](./screenshots/linear-algebra.png)  
+*Linear algebra functions*
+
+![Decomposition](./screenshots/decomposition.png)  
+*Matrix decomposition results*
+
+---
+
+## 🌐 Browser Support
+
+Compatible with all modern browsers:
+- Chrome
+- Firefox
+- Safari
+- Edge
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!  
+Feel free to open an issue or submit a pull request.
+
+---
+
+## 🔮 Future Enhancements
+
+- [ ] Matrix inversion
+- [ ] Singular value decomposition (SVD)
+- [ ] Matrix exponentiation
+- [ ] Support for complex numbers
+- [ ] Dark mode toggle
+
+---
+
+**Created by [Your Name]** — [GitHub Profile](https://github.com/yourusername)
