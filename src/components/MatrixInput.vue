@@ -13,6 +13,9 @@
 
       <!-- Main Content -->
       <main class="space-y-8">
+        <!-- Error Display -->
+        <ErrorDisplay :error="error" />
+
         <!-- Matrix Configuration Card -->
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
           <div class="bg-gray-800 text-white px-6 py-4 flex items-center">
@@ -40,44 +43,10 @@
             <!-- Matrices Container -->
             <div class="flex flex-col md:flex-row gap-6 mb-4">
               <!-- Matrix A -->
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center justify-center gap-2">
-                  <i class="fas fa-matrix"></i> Matrix A
-                </h3>
-                <div class="inline-block border-2 border-blue-500 rounded-lg p-3 bg-gray-50 overflow-x-auto">
-                  <table class="mx-auto">
-                    <tr v-for="(row, i) in matrixA" :key="i">
-                      <td v-for="(val, j) in row" :key="j" class="p-1">
-                        <input
-                          v-model.number="matrixA[i][j]"
-                          type="number"
-                          class="w-14 h-10 text-center text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                        >
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
+              <MatrixTable title="Matrix A" v-model:matrix="matrixA" />
 
               <!-- Matrix B -->
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center justify-center gap-2">
-                  <i class="fas fa-matrix"></i> Matrix B
-                </h3>
-                <div class="inline-block border-2 border-blue-500 rounded-lg p-3 bg-gray-50 overflow-x-auto">
-                  <table class="mx-auto">
-                    <tr v-for="(row, i) in matrixB" :key="i">
-                      <td v-for="(val, j) in row" :key="j" class="p-1">
-                        <input
-                          v-model.number="matrixB[i][j]"
-                          type="number"
-                          class="w-14 h-10 text-center text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                        >
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
+              <MatrixTable title="Matrix B" v-model:matrix="matrixB" />
             </div>
           </div>
         </div>
@@ -269,44 +238,40 @@
 </template>
 
 <script>
-import { createApp, ref, watch } from 'vue';
-import * as math from 'mathjs';
+import { useMatrices } from '../composables/useMatrices.js';
+import MatrixTable from './MatrixTable.vue';
+import ErrorDisplay from './ErrorDisplay.vue';
 
 export default {
+  components: {
+    MatrixTable,
+    ErrorDisplay,
+  },
   setup() {
-    const matrixSize = ref(3);
-    const matrixA = ref(createMatrix(matrixSize.value));
-    const matrixB = ref(createMatrix(matrixSize.value));
-    const vectorB = ref(Array(matrixSize.value).fill(0));
-    const operationResult = ref([]);
-    const determinant = ref(null);
-    const solution = ref(null);
-    const eigenvalues = ref(null);
-    const lu = ref(null);
-    const qr = ref(null);
-    const savedMatrix = ref(null);
-    const error = ref(null);
-
-    function createMatrix(size) {
-      return Array.from({ length: size }, () => Array(size).fill(0));
-    }
-
-    function resetResults() {
-      operationResult.value = [];
-      determinant.value = null;
-      solution.value = null;
-      eigenvalues.value = null;
-      lu.value = null;
-      qr.value = null;
-      error.value = null;
-    }
-
-    watch(matrixSize, (newSize) => {
-      matrixA.value = createMatrix(newSize);
-      matrixB.value = createMatrix(newSize);
-      vectorB.value = Array(newSize).fill(0);
-      resetResults();
-    });
+    const {
+      matrixSize,
+      matrixA,
+      matrixB,
+      vectorB,
+      operationResult,
+      determinant,
+      solution,
+      eigenvalues,
+      lu,
+      qr,
+      error,
+      calculateDeterminant,
+      addMatrices,
+      subtractMatrices,
+      multiplyMatrices,
+      solveLinearEquations,
+      calculateEigenvalues,
+      luDecomposition,
+      qrDecomposition,
+      saveMatrix,
+      loadMatrix,
+      formatDecomposition
+    } = useMatrices();
 
     return {
       matrixSize,
@@ -319,119 +284,21 @@ export default {
       eigenvalues,
       lu,
       qr,
-      savedMatrix,
       error,
-      calculateDeterminant() {
-        resetResults();
-        try {
-          determinant.value = math.det(matrixA.value);
-        } catch (err) {
-          error.value = 'Error calculating determinant: ' + err.message;
-        }
-      },
-      addMatrices() {
-        resetResults();
-        try {
-          operationResult.value = math.add(matrixA.value, matrixB.value);
-        } catch (err) {
-          error.value = 'Error adding matrices: ' + err.message;
-        }
-      },
-      subtractMatrices() {
-        resetResults();
-        try {
-          operationResult.value = math.subtract(matrixA.value, matrixB.value);
-        } catch (err) {
-          error.value = 'Error subtracting matrices: ' + err.message;
-        }
-      },
-      multiplyMatrices() {
-        resetResults();
-        try {
-          operationResult.value = math.multiply(matrixA.value, matrixB.value);
-        } catch (err) {
-          error.value = 'Error multiplying matrices: ' + err.message;
-        }
-      },
-      solveLinearEquations() {
-        resetResults();
-        try {
-          const b = math.matrix(vectorB.value.map(x => [x]));
-          solution.value = math.lusolve(matrixA.value, b).toArray().flat();
-        } catch (err) {
-          error.value = 'Error solving equations: ' + err.message;
-        }
-      },
-      calculateEigenvalues() {
-        resetResults();
-        try {
-          const result = math.eigs(matrixA.value);
-          eigenvalues.value = result.values.map(v => 
-            typeof v === 'number' ? v.toFixed(4) : 
-            `${v.re.toFixed(4)} + ${v.im.toFixed(4)}i`
-          ).join(', ');
-        } catch (err) {
-          error.value = 'Error calculating eigenvalues: ' + err.message;
-        }
-      },
-      luDecomposition() {
-        resetResults();
-        try {
-          const result = math.lup(matrixA.value);
-          lu.value = {
-            L: result.L.toArray(),
-            U: result.U.toArray(),
-            P: result.p.map(i => i + 1)
-          };
-        } catch (err) {
-          error.value = 'Error performing LU decomposition: ' + err.message;
-        }
-      },
-      qrDecomposition() {
-        resetResults();
-        try {
-          const result = math.qr(matrixA.value);
-          qr.value = {
-            Q: result.Q.toArray(),
-            R: result.R.toArray()
-          };
-        } catch (err) {
-          error.value = 'Error performing QR decomposition: ' + err.message;
-        }
-      },
-      saveMatrix() {
-        savedMatrix.value = JSON.stringify(matrixA.value);
-        alert('Matrix A saved successfully!');
-      },
-      loadMatrix() {
-        if (savedMatrix.value) {
-          matrixA.value = JSON.parse(savedMatrix.value);
-          matrixSize.value = matrixA.value.length;
-          alert('Matrix A loaded successfully!');
-        } else {
-          alert('No matrix saved yet.');
-        }
-      },
-      formatDecomposition(decomp) {
-        let result = '';
-        for (const [key, value] of Object.entries(decomp)) {
-          result += `${key}:\n`;
-          result += math.format(value, { precision: 4 }) + '\n\n';
-        }
-        return result;
-      }
+      calculateDeterminant,
+      addMatrices,
+      subtractMatrices,
+      multiplyMatrices,
+      solveLinearEquations,
+      calculateEigenvalues,
+      luDecomposition,
+      qrDecomposition,
+      saveMatrix,
+      loadMatrix,
+      formatDecomposition
     };
   }
 };
-
-const app = createApp({
-  template: '#app-template',
-  setup() {
-    return {};
-  }
-});
-
-app.mount('#app');
 </script>
 
 <style>
