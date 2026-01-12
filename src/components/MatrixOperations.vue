@@ -1,132 +1,85 @@
 <template>
-  <div class="bg-white rounded-xl shadow-lg overflow-hidden h-full">
+  <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+    <!-- Basic Operations -->
     <div class="bg-blue-600 text-white px-6 py-4 flex items-center">
       <i class="fas fa-calculator mr-3"></i>
-      <h2 class="text-xl font-semibold">Matrix Operations</h2>
+      <h2 class="text-lg font-semibold">Matrix Operations</h2>
     </div>
-    
     <div class="p-6">
-      <div class="flex flex-wrap gap-3 mb-6">
-        <button
-          @click="calculateDeterminant"
-          class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-        >
-          <i class="fas fa-determinant mr-2"></i> Determinant (A)
-        </button>
-        <button
-          @click="addMatrices"
-          class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-        >
-          <i class="fas fa-plus-circle mr-2"></i> Add (A+B)
-        </button>
-        <button
-          @click="subtractMatrices"
-          class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-        >
-          <i class="fas fa-minus-circle mr-2"></i> Subtract (A-B)
-        </button>
-        <button
-          @click="multiplyMatrices"
-          class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-        >
-          <i class="fas fa-times-circle mr-2"></i> Multiply (A×B)
-        </button>
+      <div class="flex flex-wrap gap-3">
+        <button @click="calculateDeterminant" class="btn-primary">Det(A)</button>
+        <button @click="addMatrices" class="btn-primary">A + B</button>
+        <button @click="subtractMatrices" class="btn-primary">A - B</button>
+        <button @click="multiplyMatrices" class="btn-primary">A × B</button>
       </div>
+    </div>
 
-      <div v-if="determinant !== null || operationResult.length" class="mt-4 p-4 bg-gray-50 rounded-lg">
-        <h3 class="font-semibold mb-3 flex items-center">
-          <i class="fas fa-list-alt mr-2"></i> Results
-        </h3>
-        
-        <div class="space-y-4">
-          <div v-if="determinant !== null">
-            <p class="font-medium">Determinant of A:</p>
-            <p class="text-xl font-mono">{{ determinant }}</p>
-          </div>
+    <!-- Linear Algebra -->
+    <div class="bg-green-600 text-white px-6 py-4 flex items-center">
+      <i class="fas fa-brain mr-3"></i>
+      <h2 class="text-lg font-semibold">Linear Algebra</h2>
+    </div>
+    <div class="p-6">
+      <div class="flex flex-wrap gap-3">
+        <button @click="solveLinearEquations" class="btn-secondary">Solve Ax = b</button>
+        <button @click="calculateEigenvalues" class="btn-secondary">Eigenvalues</button>
+      </div>
+    </div>
 
-          <div v-if="operationResult.length">
-            <p class="font-medium">Operation Result:</p>
-            <div class="overflow-x-auto">
-              <table class="mx-auto border">
-                <tr v-for="(row, i) in operationResult" :key="i">
-                  <td v-for="(val, j) in row" :key="j" class="px-4 py-2 border font-mono">
-                    {{ val.toFixed(2) }}
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
+    <!-- Decomposition -->
+    <div class="bg-red-600 text-white px-6 py-4 flex items-center">
+      <i class="fas fa-project-diagram mr-3"></i>
+      <h2 class="text-lg font-semibold">Matrix Decomposition</h2>
+    </div>
+    <div class="p-6">
+      <div class="flex flex-wrap gap-3">
+        <button @click="luDecomposition" class="btn-danger">LU</button>
+        <button @click="qrDecomposition" class="btn-danger">QR</button>
+      </div>
+    </div>
+
+     <!-- Data Persistence -->
+    <div class="bg-gray-700 text-white px-6 py-4 flex items-center">
+      <i class="fas fa-save mr-3"></i>
+      <h2 class="text-lg font-semibold">Data</h2>
+    </div>
+    <div class="p-6">
+        <div class="flex flex-wrap gap-3">
+            <button @click="saveMatrix" class="btn-dark">Save A</button>
+            <button @click="loadMatrix" class="btn-dark">Load A</button>
         </div>
-      </div>
     </div>
   </div>
 </template>
 
-<script>
-import * as math from 'mathjs'
+<script setup>
+import { defineProps } from 'vue';
 
-export default {
-  props: {
-    matrixA: Array,
-    matrixB: Array
-  },
-  emits: ['determinant', 'operation-result' ],
-  /**
-   * Sets up the component's state and functions.
-   *
-   * @param {object} props - The component's props.
-   * @param {object} context - The component's context.
-   *
-   * @returns {object} An object with the component's state and functions.
-   */
-  setup(props, { emit }) {
-    // const determinant = ref(null)
-    // const operationResult = ref([])
-
-    function calculateDeterminant() {
-      try {
-        const det = math.det(props.matrixA)
-        emit('determinant', det)
-      } catch (error) {
-        console.error('Error calculating determinant:', error)
-      }
-    }
-
-    function addMatrices() {
-      try {
-        const result = math.add(props.matrixA, props.matrixB)
-        emit('operation-result', result)
-      } catch (error) {
-        console.error('Error adding matrices:', error)
-      }
-    }
-
-    function subtractMatrices() {
-      try {
-        const result = math.subtract(props.matrixA, props.matrixB)
-        emit('operation-result', result)
-      } catch (error) {
-        console.error('Error subtracting matrices:', error)
-      }
-    }
-
-    function multiplyMatrices() {
-      try {
-        const result = math.multiply(props.matrixA, props.matrixB)
-        emit('operation-result', result)
-      } catch (error) {
-        console.error('Error multiplying matrices:', error)
-      }
-    }
-
-    return {
-      // determinant,
-      // operationResult,
-      calculateDeterminant,
-      addMatrices,
-      subtractMatrices,
-      multiplyMatrices
-    }
-  }
-}
+defineProps({
+  calculateDeterminant: Function,
+  addMatrices: Function,
+  subtractMatrices: Function,
+  multiplyMatrices: Function,
+  solveLinearEquations: Function,
+  calculateEigenvalues: Function,
+  luDecomposition: Function,
+  qrDecomposition: Function,
+  saveMatrix: Function,
+  loadMatrix: Function,
+});
 </script>
+
+<style scoped>
+.btn-primary {
+  @apply px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1;
+}
+.btn-secondary {
+  @apply px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1;
+}
+.btn-danger {
+  @apply px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1;
+}
+.btn-dark {
+    @apply px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center transition transform hover:-translate-y-1;
+}
+</style>
