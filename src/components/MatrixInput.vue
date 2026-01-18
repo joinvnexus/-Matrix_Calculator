@@ -35,6 +35,20 @@
                   class="w-20 px-3 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
               </div>
+              <div class="flex flex-wrap gap-3">
+                <button
+                  @click="saveMatrix"
+                  class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
+                >
+                  <i class="fas fa-save mr-2"></i> Save Matrix A
+                </button>
+                <button
+                  @click="loadMatrix"
+                  class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
+                >
+                  <i class="fas fa-folder-open mr-2"></i> Load Matrix A
+                </button>
+              </div>
             </div>
 
             <!-- Matrices Container -->
@@ -83,178 +97,61 @@
         </div>
 
         <!-- Operations Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Matrix Operations -->
-          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="bg-blue-600 text-white px-6 py-4 flex items-center">
-              <i class="fas fa-calculator mr-3"></i>
-              <h2 class="text-lg font-semibold">Matrix Operations</h2>
-            </div>
-            <div class="p-6">
-              <div class="flex flex-wrap gap-3 mb-6">
-                <button
-                  @click="calculateDeterminant"
-                  class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
-                >
-                  <i class="fas fa-determinant mr-2"></i> Det(A)
-                </button>
-                <button
-                  @click="addMatrices"
-                  class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
-                >
-                  <i class="fas fa-plus-circle mr-2"></i> A+B
-                </button>
-                <button
-                  @click="subtractMatrices"
-                  class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
-                >
-                  <i class="fas fa-minus-circle mr-2"></i> A-B
-                </button>
-                <button
-                  @click="multiplyMatrices"
-                  class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
-                >
-                  <i class="fas fa-times-circle mr-2"></i> A×B
-                </button>
-              </div>
+        <OperationButtons
+          :matrixA="matrixA"
+          :matrixB="matrixB"
+          :vectorB="vectorB"
+          @determinant="handleDeterminant"
+          @operation-result="handleOperationResult"
+          @solution="handleSolution"
+          @eigenvalues="handleEigenvalues"
+          @decomposition="handleDecomposition"
+        />
 
-              <!-- Results -->
-              <div v-if="operationResult.length || determinant !== null" class="bg-gray-50 rounded-lg p-4">
-                <h4 class="text-gray-800 font-medium mb-3 flex items-center">
-                  <i class="fas fa-list-alt mr-2"></i> Results
-                </h4>
-                <div class="bg-white rounded p-3 border border-gray-200 overflow-x-auto">
-                  <p v-if="determinant !== null" class="text-gray-800 mb-2">
-                    <span class="font-semibold">Determinant of A:</span> {{ determinant }}
-                  </p>
-                  <div v-if="operationResult.length">
-                    <p class="text-gray-800 font-semibold mb-2">Operation Result:</p>
-                    <div class="inline-block border border-gray-200 rounded p-2">
-                      <table class="mx-auto">
-                        <tr v-for="(row, i) in operationResult" :key="i">
-                          <td v-for="(val, j) in row" :key="j" class="px-3 py-2 text-gray-800 border border-gray-200">
-                            {{ val.toFixed(2) }}
-                          </td>
-                        </tr>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <!-- Results Section -->
+        <div v-if="operationResult.length || determinant !== null || solution || eigenvalues || lu || qr" class="bg-white rounded-xl shadow-lg overflow-hidden mt-6">
+          <div class="bg-gray-800 text-white px-6 py-4 flex items-center">
+            <i class="fas fa-list-alt mr-3"></i>
+            <h2 class="text-lg font-semibold">Results</h2>
           </div>
-
-          <!-- Linear Algebra -->
-          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="bg-green-600 text-white px-6 py-4 flex items-center">
-              <i class="fas fa-brain mr-3"></i>
-              <h2 class="text-lg font-semibold">Linear Algebra</h2>
+          <div class="p-6 overflow-x-auto">
+            <div v-if="determinant !== null" class="mb-4">
+              <p class="font-semibold text-gray-800">Determinant of A:</p>
+              <p class="text-lg font-mono text-blue-600">{{ determinant }}</p>
             </div>
-            <div class="p-6">
-              <div class="flex flex-wrap gap-3 mb-6">
-                <button
-                  @click="solveLinearEquations"
-                  class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
-                >
-                  <i class="fas fa-equals mr-2"></i> Solve
-                </button>
-                <button
-                  @click="calculateEigenvalues"
-                  class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
-                >
-                  <i class="fas fa-chart-line mr-2"></i> Eigenvalues
-                </button>
-              </div>
-
-              <!-- Vector Inputs -->
-              <div class="flex flex-wrap gap-3 mb-6">
-                <div v-for="(val, index) in vectorB" :key="index" class="flex flex-col">
-                  <label class="text-gray-800 text-sm mb-1">Vector b{{index+1}}:</label>
-                  <input
-                    v-model.number="vectorB[index]"
-                    type="number"
-                    class="w-20 px-3 py-1 border text-gray-700 border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  >
-                </div>
-              </div>
-
-              <!-- Results -->
-              <div v-if="solution || eigenvalues" class="bg-gray-50 rounded-lg p-4">
-                <h4 class="text-gray-800 font-medium mb-3 flex items-center">
-                  <i class="fas fa-lightbulb mr-2"></i> Results
-                </h4>
-                <div class="bg-white rounded p-3 border border-gray-200 overflow-x-auto">
-                  <div v-if="solution">
-                    <p class="text-gray-800 font-semibold mb-2">Solution:</p>
-                    <div class="inline-block border border-gray-200 rounded p-2">
-                      <table class="mx-auto">
-                        <tr v-for="(val, i) in solution" :key="i">
-                          <td class="px-3 py-2 border border-gray-200">{{ val.toFixed(2) }}</td>
-                        </tr>
-                      </table>
-                    </div>
-                  </div>
-                  <p v-if="eigenvalues" class="text-gray-800 mt-3">
-                    <span class="font-semibold">Eigenvalues:</span> {{ eigenvalues }}
-                  </p>
-                </div>
+            <div v-if="operationResult.length" class="mb-4">
+              <p class="font-semibold text-gray-800">Operation Result:</p>
+              <div class="inline-block border border-gray-200 rounded p-2">
+                <table class="mx-auto">
+                  <tr v-for="(row, i) in operationResult" :key="i">
+                    <td v-for="(val, j) in row" :key="j" class="px-3 py-2 text-gray-800 border border-gray-200">
+                      {{ val.toFixed(2) }}
+                    </td>
+                  </tr>
+                </table>
               </div>
             </div>
-          </div>
-
-          <!-- Matrix Decomposition -->
-          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="bg-red-600 text-white px-6 py-4 flex items-center">
-              <i class="fas fa-project-diagram mr-3"></i>
-              <h2 class="text-lg font-semibold">Matrix Decomposition</h2>
+            <div v-if="solution" class="mb-4">
+              <p class="font-semibold text-gray-800">Solution:</p>
+               <div class="inline-block border border-gray-200 rounded p-2">
+                <table class="mx-auto">
+                  <tr v-for="(val, i) in solution" :key="i">
+                    <td class="px-3 py-2 border border-gray-200">{{ val.toFixed(2) }}</td>
+                  </tr>
+                </table>
+              </div>
             </div>
-            <div class="p-6">
-              <div class="flex flex-wrap gap-3 mb-6">
-                <button
-                  @click="luDecomposition"
-                  class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
-                >
-                  <i class="fas fa-sitemap mr-2"></i> LU
-                </button>
-                <button
-                  @click="qrDecomposition"
-                  class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
-                >
-                  <i class="fas fa-qrcode mr-2"></i> QR
-                </button>
-              </div>
-
-              <div class="flex flex-wrap gap-3 mb-6">
-                <button
-                  @click="saveMatrix"
-                  class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
-                >
-                  <i class="fas fa-save mr-2"></i> Save
-                </button>
-                <button
-                  @click="loadMatrix"
-                  class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
-                >
-                  <i class="fas fa-folder-open mr-2"></i> Load
-                </button>
-              </div>
-
-              <!-- Results -->
-              <div v-if="lu || qr" class="bg-gray-50 rounded-lg p-4">
-                <h4 class="text-gray-800 font-medium mb-3 flex items-center">
-                  <i class="fas fa-file-alt mr-2"></i> Decomposition
-                </h4>
-                <div class="bg-white rounded p-3 border border-gray-200 overflow-x-auto">
-                  <div v-if="lu">
-                    <p class="text-gray-800 font-semibold mb-2">LU Decomposition:</p>
-                    <pre class="text-sm bg-gray-100 p-2 rounded overflow-x-auto">{{ formatDecomposition(lu) }}</pre>
-                  </div>
-                  <div v-if="qr" class="mt-3">
-                    <p class="text-gray-800 font-semibold mb-2">QR Decomposition:</p>
-                    <pre class="text-sm bg-gray-100 p-2 rounded overflow-x-auto">{{ formatDecomposition(qr) }}</pre>
-                  </div>
-                </div>
-              </div>
+            <div v-if="eigenvalues" class="mb-4">
+              <p class="font-semibold text-gray-800">Eigenvalues:</p>
+              <p class="text-lg font-mono text-green-600">{{ eigenvalues }}</p>
+            </div>
+            <div v-if="lu">
+              <p class="font-semibold text-gray-800">LU Decomposition:</p>
+              <pre class="text-sm bg-gray-100 p-2 rounded overflow-x-auto">{{ formatDecomposition(lu) }}</pre>
+            </div>
+            <div v-if="qr" class="mt-3">
+              <p class="font-semibold text-gray-800">QR Decomposition:</p>
+              <pre class="text-sm bg-gray-100 p-2 rounded overflow-x-auto">{{ formatDecomposition(qr) }}</pre>
             </div>
           </div>
         </div>
@@ -271,8 +168,12 @@
 <script>
 import { createApp, ref, watch } from 'vue';
 import * as math from 'mathjs';
+import OperationButtons from './OperationButtons.vue';
 
 export default {
+  components: {
+    OperationButtons,
+  },
   setup() {
     const matrixSize = ref(3);
     const matrixA = ref(createMatrix(matrixSize.value));
@@ -319,84 +220,29 @@ export default {
       eigenvalues,
       lu,
       qr,
-      savedMatrix,
       error,
-      calculateDeterminant() {
+      handleDeterminant(det) {
         resetResults();
-        try {
-          determinant.value = math.det(matrixA.value);
-        } catch (err) {
-          error.value = 'Error calculating determinant: ' + err.message;
-        }
+        determinant.value = det;
       },
-      addMatrices() {
+      handleOperationResult(result) {
         resetResults();
-        try {
-          operationResult.value = math.add(matrixA.value, matrixB.value);
-        } catch (err) {
-          error.value = 'Error adding matrices: ' + err.message;
-        }
+        operationResult.value = result;
       },
-      subtractMatrices() {
+      handleSolution(sol) {
         resetResults();
-        try {
-          operationResult.value = math.subtract(matrixA.value, matrixB.value);
-        } catch (err) {
-          error.value = 'Error subtracting matrices: ' + err.message;
-        }
+        solution.value = sol;
       },
-      multiplyMatrices() {
+      handleEigenvalues(eig) {
         resetResults();
-        try {
-          operationResult.value = math.multiply(matrixA.value, matrixB.value);
-        } catch (err) {
-          error.value = 'Error multiplying matrices: ' + err.message;
-        }
+        eigenvalues.value = eig;
       },
-      solveLinearEquations() {
+      handleDecomposition({ type, data }) {
         resetResults();
-        try {
-          const b = math.matrix(vectorB.value.map(x => [x]));
-          solution.value = math.lusolve(matrixA.value, b).toArray().flat();
-        } catch (err) {
-          error.value = 'Error solving equations: ' + err.message;
-        }
-      },
-      calculateEigenvalues() {
-        resetResults();
-        try {
-          const result = math.eigs(matrixA.value);
-          eigenvalues.value = result.values.map(v => 
-            typeof v === 'number' ? v.toFixed(4) : 
-            `${v.re.toFixed(4)} + ${v.im.toFixed(4)}i`
-          ).join(', ');
-        } catch (err) {
-          error.value = 'Error calculating eigenvalues: ' + err.message;
-        }
-      },
-      luDecomposition() {
-        resetResults();
-        try {
-          const result = math.lup(matrixA.value);
-          lu.value = {
-            L: result.L.toArray(),
-            U: result.U.toArray(),
-            P: result.p.map(i => i + 1)
-          };
-        } catch (err) {
-          error.value = 'Error performing LU decomposition: ' + err.message;
-        }
-      },
-      qrDecomposition() {
-        resetResults();
-        try {
-          const result = math.qr(matrixA.value);
-          qr.value = {
-            Q: result.Q.toArray(),
-            R: result.R.toArray()
-          };
-        } catch (err) {
-          error.value = 'Error performing QR decomposition: ' + err.message;
+        if (type === 'lu') {
+          lu.value = data;
+        } else if (type === 'qr') {
+          qr.value = data;
         }
       },
       saveMatrix() {
