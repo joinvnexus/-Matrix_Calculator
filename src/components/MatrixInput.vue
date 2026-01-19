@@ -11,6 +11,9 @@
         </p>
       </header>
 
+      <!-- Error Display -->
+      <ErrorDisplay :error="error" />
+
       <!-- Main Content -->
       <main class="space-y-8">
         <!-- Matrix Configuration Card -->
@@ -93,25 +96,25 @@
             <div class="p-6">
               <div class="flex flex-wrap gap-3 mb-6">
                 <button
-                  @click="calculateDeterminant"
+                  @click="handleDeterminant"
                   class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
                 >
                   <i class="fas fa-determinant mr-2"></i> Det(A)
                 </button>
                 <button
-                  @click="addMatrices"
+                  @click="handleAdd"
                   class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
                 >
                   <i class="fas fa-plus-circle mr-2"></i> A+B
                 </button>
                 <button
-                  @click="subtractMatrices"
+                  @click="handleSubtract"
                   class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
                 >
                   <i class="fas fa-minus-circle mr-2"></i> A-B
                 </button>
                 <button
-                  @click="multiplyMatrices"
+                  @click="handleMultiply"
                   class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
                 >
                   <i class="fas fa-times-circle mr-2"></i> A×B
@@ -153,13 +156,13 @@
             <div class="p-6">
               <div class="flex flex-wrap gap-3 mb-6">
                 <button
-                  @click="solveLinearEquations"
+                  @click="handleSolve"
                   class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
                 >
                   <i class="fas fa-equals mr-2"></i> Solve
                 </button>
                 <button
-                  @click="calculateEigenvalues"
+                  @click="handleEigenvalues"
                   class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
                 >
                   <i class="fas fa-chart-line mr-2"></i> Eigenvalues
@@ -211,13 +214,13 @@
             <div class="p-6">
               <div class="flex flex-wrap gap-3 mb-6">
                 <button
-                  @click="luDecomposition"
+                  @click="handleLU"
                   class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
                 >
                   <i class="fas fa-sitemap mr-2"></i> LU
                 </button>
                 <button
-                  @click="qrDecomposition"
+                  @click="handleQR"
                   class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center transition transform hover:-translate-y-1"
                 >
                   <i class="fas fa-qrcode mr-2"></i> QR
@@ -265,14 +268,22 @@
         <p>Matrix Calculator &copy; {{ new Date().getFullYear() }} | Perform complex matrix operations with ease</p>
       </footer>
     </div>
+    <AppNotification :message="notificationMessage" :show="showNotification" />
   </div>
 </template>
 
 <script>
-import { createApp, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
+import { useMatrixOperations } from '../composables/useMatrixOperations.js';
 import * as math from 'mathjs';
+import ErrorDisplay from './ErrorDisplay.vue';
+import AppNotification from './AppNotification.vue';
 
 export default {
+  components: {
+    ErrorDisplay,
+    AppNotification,
+  },
   setup() {
     const matrixSize = ref(3);
     const matrixA = ref(createMatrix(matrixSize.value));
@@ -285,7 +296,20 @@ export default {
     const lu = ref(null);
     const qr = ref(null);
     const savedMatrix = ref(null);
-    const error = ref(null);
+    const showNotification = ref(false);
+    const notificationMessage = ref('');
+
+    const {
+      error,
+      calculateDeterminant,
+      addMatrices,
+      subtractMatrices,
+      multiplyMatrices,
+      solveLinearEquations,
+      calculateEigenvalues,
+      luDecomposition,
+      qrDecomposition,
+    } = useMatrixOperations();
 
     function createMatrix(size) {
       return Array.from({ length: size }, () => Array(size).fill(0));
@@ -298,7 +322,6 @@ export default {
       eigenvalues.value = null;
       lu.value = null;
       qr.value = null;
-      error.value = null;
     }
 
     watch(matrixSize, (newSize) => {
@@ -307,6 +330,79 @@ export default {
       vectorB.value = Array(newSize).fill(0);
       resetResults();
     });
+
+    const handleDeterminant = () => {
+      resetResults();
+      determinant.value = calculateDeterminant(matrixA.value);
+    };
+
+    const handleAdd = () => {
+      resetResults();
+      operationResult.value = addMatrices(matrixA.value, matrixB.value);
+    };
+
+    const handleSubtract = () => {
+      resetResults();
+      operationResult.value = subtractMatrices(matrixA.value, matrixB.value);
+    };
+
+    const handleMultiply = () => {
+      resetResults();
+      operationResult.value = multiplyMatrices(matrixA.value, matrixB.value);
+    };
+
+    const handleSolve = () => {
+      resetResults();
+      solution.value = solveLinearEquations(matrixA.value, vectorB.value);
+    };
+
+    const handleEigenvalues = () => {
+      resetResults();
+      eigenvalues.value = calculateEigenvalues(matrixA.value);
+    };
+
+    const handleLU = () => {
+      resetResults();
+      lu.value = luDecomposition(matrixA.value);
+    };
+
+    const handleQR = () => {
+      resetResults();
+      qr.value = qrDecomposition(matrixA.value);
+    };
+
+    const triggerNotification = (message) => {
+      notificationMessage.value = message;
+      showNotification.value = true;
+      setTimeout(() => {
+        showNotification.value = false;
+      }, 3000);
+    };
+
+    const saveMatrix = () => {
+      savedMatrix.value = JSON.stringify(matrixA.value);
+      triggerNotification('Matrix A saved successfully!');
+    };
+
+    const loadMatrix = () => {
+      if (savedMatrix.value) {
+        matrixA.value = JSON.parse(savedMatrix.value);
+        matrixSize.value = matrixA.value.length;
+        triggerNotification('Matrix A loaded successfully!');
+      } else {
+        triggerNotification('No matrix saved yet.');
+      }
+    };
+
+    const formatDecomposition = (decomp) => {
+      if (!decomp) return '';
+      let result = '';
+      for (const [key, value] of Object.entries(decomp)) {
+        result += `${key}:\n`;
+        result += math.format(value, { precision: 4 }) + '\n\n';
+      }
+      return result;
+    };
 
     return {
       matrixSize,
@@ -319,119 +415,23 @@ export default {
       eigenvalues,
       lu,
       qr,
-      savedMatrix,
       error,
-      calculateDeterminant() {
-        resetResults();
-        try {
-          determinant.value = math.det(matrixA.value);
-        } catch (err) {
-          error.value = 'Error calculating determinant: ' + err.message;
-        }
-      },
-      addMatrices() {
-        resetResults();
-        try {
-          operationResult.value = math.add(matrixA.value, matrixB.value);
-        } catch (err) {
-          error.value = 'Error adding matrices: ' + err.message;
-        }
-      },
-      subtractMatrices() {
-        resetResults();
-        try {
-          operationResult.value = math.subtract(matrixA.value, matrixB.value);
-        } catch (err) {
-          error.value = 'Error subtracting matrices: ' + err.message;
-        }
-      },
-      multiplyMatrices() {
-        resetResults();
-        try {
-          operationResult.value = math.multiply(matrixA.value, matrixB.value);
-        } catch (err) {
-          error.value = 'Error multiplying matrices: ' + err.message;
-        }
-      },
-      solveLinearEquations() {
-        resetResults();
-        try {
-          const b = math.matrix(vectorB.value.map(x => [x]));
-          solution.value = math.lusolve(matrixA.value, b).toArray().flat();
-        } catch (err) {
-          error.value = 'Error solving equations: ' + err.message;
-        }
-      },
-      calculateEigenvalues() {
-        resetResults();
-        try {
-          const result = math.eigs(matrixA.value);
-          eigenvalues.value = result.values.map(v => 
-            typeof v === 'number' ? v.toFixed(4) : 
-            `${v.re.toFixed(4)} + ${v.im.toFixed(4)}i`
-          ).join(', ');
-        } catch (err) {
-          error.value = 'Error calculating eigenvalues: ' + err.message;
-        }
-      },
-      luDecomposition() {
-        resetResults();
-        try {
-          const result = math.lup(matrixA.value);
-          lu.value = {
-            L: result.L.toArray(),
-            U: result.U.toArray(),
-            P: result.p.map(i => i + 1)
-          };
-        } catch (err) {
-          error.value = 'Error performing LU decomposition: ' + err.message;
-        }
-      },
-      qrDecomposition() {
-        resetResults();
-        try {
-          const result = math.qr(matrixA.value);
-          qr.value = {
-            Q: result.Q.toArray(),
-            R: result.R.toArray()
-          };
-        } catch (err) {
-          error.value = 'Error performing QR decomposition: ' + err.message;
-        }
-      },
-      saveMatrix() {
-        savedMatrix.value = JSON.stringify(matrixA.value);
-        alert('Matrix A saved successfully!');
-      },
-      loadMatrix() {
-        if (savedMatrix.value) {
-          matrixA.value = JSON.parse(savedMatrix.value);
-          matrixSize.value = matrixA.value.length;
-          alert('Matrix A loaded successfully!');
-        } else {
-          alert('No matrix saved yet.');
-        }
-      },
-      formatDecomposition(decomp) {
-        let result = '';
-        for (const [key, value] of Object.entries(decomp)) {
-          result += `${key}:\n`;
-          result += math.format(value, { precision: 4 }) + '\n\n';
-        }
-        return result;
-      }
+      handleDeterminant,
+      handleAdd,
+      handleSubtract,
+      handleMultiply,
+      handleSolve,
+      handleEigenvalues,
+      handleLU,
+      handleQR,
+      saveMatrix,
+      loadMatrix,
+      formatDecomposition,
+      notificationMessage,
+      showNotification
     };
   }
 };
-
-const app = createApp({
-  template: '#app-template',
-  setup() {
-    return {};
-  }
-});
-
-app.mount('#app');
 </script>
 
 <style>
