@@ -1,93 +1,112 @@
-import * as math from 'mathjs'
+import * as math from 'mathjs';
+import { ref } from 'vue';
 
-export function useMatrixOperations(props, emit) {
-  async function calculateDeterminant() {
+export function useMatrixOperations() {
+  const error = ref(null);
+
+  const resetError = () => {
+    error.value = null;
+  };
+
+  const calculateDeterminant = (matrix) => {
+    resetError();
     try {
-      const det = math.det(props.matrixA)
-      emit('determinant', det)
-    } catch (error) {
-      console.error('Error calculating determinant:', error)
+      return math.det(matrix);
+    } catch (err) {
+      error.value = 'Error calculating determinant: ' + err.message;
+      return null;
     }
-  }
+  };
 
-  async function addMatrices() {
+  const addMatrices = (matrixA, matrixB) => {
+    resetError();
     try {
-      const result = math.add(props.matrixA, props.matrixB)
-      emit('operation-result', result)
-    } catch (error) {
-      console.error('Error adding matrices:', error)
+      return math.add(matrixA, matrixB);
+    } catch (err) {
+      error.value = 'Error adding matrices: ' + err.message;
+      return null;
     }
-  }
+  };
 
-  async function subtractMatrices() {
+  const subtractMatrices = (matrixA, matrixB) => {
+    resetError();
     try {
-      const result = math.subtract(props.matrixA, props.matrixB)
-      emit('operation-result', result)
-    } catch (error) {
-      console.error('Error subtracting matrices:', error)
+      return math.subtract(matrixA, matrixB);
+    } catch (err) {
+      error.value = 'Error subtracting matrices: ' + err.message;
+      return null;
     }
-  }
+  };
 
-  async function multiplyMatrices() {
+  const multiplyMatrices = (matrixA, matrixB) => {
+    resetError();
     try {
-      const result = math.multiply(props.matrixA, props.matrixB)
-      emit('operation-result', result)
-    } catch (error) {
-      console.error('Error multiplying matrices:', error)
+      return math.multiply(matrixA, matrixB);
+    } catch (err) {
+      error.value = 'Error multiplying matrices: ' + err.message;
+      return null;
     }
-  }
+  };
 
-  async function solveLinearEquations() {
+  const solveLinearEquations = (matrixA, vector) => {
+    resetError();
     try {
-      const b = math.matrix(props.vectorB.map(x => [x]))
-      const solution = math.lusolve(props.matrixA, b).toArray().flat()
-      emit('solution', solution)
-    } catch (error) {
-      console.error('Error solving equations:', error)
+      const b = math.matrix(vector.map(x => [x]));
+      return math.lusolve(matrixA, b).toArray().flat();
+    } catch (err) {
+      error.value = 'Error solving equations: ' + err.message;
+      return null;
     }
-  }
+  };
 
-  async function calculateEigenvalues() {
+  const calculateEigenvalues = (matrix) => {
+    resetError();
     try {
-      const result = math.eigs(props.matrixA)
-      const eigenvalues = result.values.map(v => 
-        typeof v === 'number' ? v.toFixed(4) : 
-        `${v.re.toFixed(4)} + ${v.im.toFixed(4)}i`
-      ).join(', ')
-      emit('eigenvalues', eigenvalues)
-    } catch (error) {
-      console.error('Error calculating eigenvalues:', error)
+      const result = math.eigs(matrix);
+      return result.values
+        .map(v =>
+          typeof v === 'number'
+            ? v.toFixed(4)
+            : `${v.re.toFixed(4)} + ${v.im.toFixed(4)}i`
+        )
+        .join(', ');
+    } catch (err) {
+      error.value = 'Error calculating eigenvalues: ' + err.message;
+      return null;
     }
-  }
+  };
 
-  async function luDecomposition() {
+  const luDecomposition = (matrix) => {
+    resetError();
     try {
-      const result = math.lup(props.matrixA)
-      const lu = {
+      const result = math.lup(matrix);
+      return {
         L: result.L.toArray(),
         U: result.U.toArray(),
-        P: result.p.map(i => i + 1)
-      }
-      emit('decomposition', { type: 'lu', data: lu })
-    } catch (error) {
-      console.error('Error performing LU decomposition:', error)
+        P: result.p.map(i => i + 1),
+      };
+    } catch (err) {
+      error.value = 'Error performing LU decomposition: ' + err.message;
+      return null;
     }
-  }
+  };
 
-  async function qrDecomposition() {
+  const qrDecomposition = (matrix) => {
+    resetError();
     try {
-      const result = math.qr(props.matrixA)
-      const qr = {
+      const result = math.qr(matrix);
+      return {
         Q: result.Q.toArray(),
-        R: result.R.toArray()
-      }
-      emit('decomposition', { type: 'qr', data: qr })
-    } catch (error) {
-      console.error('Error performing QR decomposition:', error)
+        R: result.R.toArray(),
+      };
+    } catch (err) {
+      error.value = 'Error performing QR decomposition: ' + err.message;
+      return null;
     }
-  }
+  };
 
   return {
+    error,
     calculateDeterminant,
     addMatrices,
     subtractMatrices,
@@ -95,6 +114,6 @@ export function useMatrixOperations(props, emit) {
     solveLinearEquations,
     calculateEigenvalues,
     luDecomposition,
-    qrDecomposition
-  }
+    qrDecomposition,
+  };
 }
