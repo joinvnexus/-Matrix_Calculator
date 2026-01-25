@@ -53,45 +53,8 @@
 
             <!-- Matrices Container -->
             <div class="flex flex-col md:flex-row gap-6 mb-4">
-              <!-- Matrix A -->
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center justify-center gap-2">
-                  <i class="fas fa-matrix"></i> Matrix A
-                </h3>
-                <div class="inline-block border-2 border-blue-500 rounded-lg p-3 bg-gray-50 overflow-x-auto">
-                  <table class="mx-auto">
-                    <tr v-for="(row, i) in matrixA" :key="i">
-                      <td v-for="(val, j) in row" :key="j" class="p-1">
-                        <input
-                          v-model.number="matrixA[i][j]"
-                          type="number"
-                          class="w-14 h-10 text-center text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                        >
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-
-              <!-- Matrix B -->
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center justify-center gap-2">
-                  <i class="fas fa-matrix"></i> Matrix B
-                </h3>
-                <div class="inline-block border-2 border-blue-500 rounded-lg p-3 bg-gray-50 overflow-x-auto">
-                  <table class="mx-auto">
-                    <tr v-for="(row, i) in matrixB" :key="i">
-                      <td v-for="(val, j) in row" :key="j" class="p-1">
-                        <input
-                          v-model.number="matrixB[i][j]"
-                          type="number"
-                          class="w-14 h-10 text-center text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                        >
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
+              <MatrixDisplay title="Matrix A" :matrix="matrixA" @update:matrix="matrixA = $event" />
+              <MatrixDisplay title="Matrix B" :matrix="matrixB" @update:matrix="matrixB = $event" />
             </div>
           </div>
         </div>
@@ -106,55 +69,21 @@
           @solution="handleSolution"
           @eigenvalues="handleEigenvalues"
           @decomposition="handleDecomposition"
+          @error="handleError"
         />
 
+        <!-- Error Display -->
+        <ErrorDisplay v-if="error" :message="error" />
+
         <!-- Results Section -->
-        <div v-if="operationResult.length || determinant !== null || solution || eigenvalues || lu || qr" class="bg-white rounded-xl shadow-lg overflow-hidden mt-6">
-          <div class="bg-gray-800 text-white px-6 py-4 flex items-center">
-            <i class="fas fa-list-alt mr-3"></i>
-            <h2 class="text-lg font-semibold">Results</h2>
-          </div>
-          <div class="p-6 overflow-x-auto">
-            <div v-if="determinant !== null" class="mb-4">
-              <p class="font-semibold text-gray-800">Determinant of A:</p>
-              <p class="text-lg font-mono text-blue-600">{{ determinant }}</p>
-            </div>
-            <div v-if="operationResult.length" class="mb-4">
-              <p class="font-semibold text-gray-800">Operation Result:</p>
-              <div class="inline-block border border-gray-200 rounded p-2">
-                <table class="mx-auto">
-                  <tr v-for="(row, i) in operationResult" :key="i">
-                    <td v-for="(val, j) in row" :key="j" class="px-3 py-2 text-gray-800 border border-gray-200">
-                      {{ val.toFixed(2) }}
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-            <div v-if="solution" class="mb-4">
-              <p class="font-semibold text-gray-800">Solution:</p>
-               <div class="inline-block border border-gray-200 rounded p-2">
-                <table class="mx-auto">
-                  <tr v-for="(val, i) in solution" :key="i">
-                    <td class="px-3 py-2 border border-gray-200">{{ val.toFixed(2) }}</td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-            <div v-if="eigenvalues" class="mb-4">
-              <p class="font-semibold text-gray-800">Eigenvalues:</p>
-              <p class="text-lg font-mono text-green-600">{{ eigenvalues }}</p>
-            </div>
-            <div v-if="lu">
-              <p class="font-semibold text-gray-800">LU Decomposition:</p>
-              <pre class="text-sm bg-gray-100 p-2 rounded overflow-x-auto">{{ formatDecomposition(lu) }}</pre>
-            </div>
-            <div v-if="qr" class="mt-3">
-              <p class="font-semibold text-gray-800">QR Decomposition:</p>
-              <pre class="text-sm bg-gray-100 p-2 rounded overflow-x-auto">{{ formatDecomposition(qr) }}</pre>
-            </div>
-          </div>
-        </div>
+        <ResultsDisplay
+          :operationResult="operationResult"
+          :determinant="determinant"
+          :solution="solution"
+          :eigenvalues="eigenvalues"
+          :lu="lu"
+          :qr="qr"
+        />
       </main>
 
       <!-- Footer -->
@@ -167,12 +96,17 @@
 
 <script>
 import { createApp, ref, watch } from 'vue';
-import * as math from 'mathjs';
 import OperationButtons from './OperationButtons.vue';
+import ErrorDisplay from './ErrorDisplay.vue';
+import MatrixDisplay from './MatrixDisplay.vue';
+import ResultsDisplay from './ResultsDisplay.vue';
 
 export default {
   components: {
     OperationButtons,
+    ErrorDisplay,
+    MatrixDisplay,
+    ResultsDisplay,
   },
   setup() {
     const matrixSize = ref(3);
@@ -185,7 +119,6 @@ export default {
     const eigenvalues = ref(null);
     const lu = ref(null);
     const qr = ref(null);
-    const savedMatrix = ref(null);
     const error = ref(null);
 
     function createMatrix(size) {
@@ -245,27 +178,24 @@ export default {
           qr.value = data;
         }
       },
+      handleError(errorMessage) {
+        resetResults();
+        error.value = errorMessage;
+      },
       saveMatrix() {
-        savedMatrix.value = JSON.stringify(matrixA.value);
+        localStorage.setItem('savedMatrixA', JSON.stringify(matrixA.value));
         alert('Matrix A saved successfully!');
       },
       loadMatrix() {
-        if (savedMatrix.value) {
-          matrixA.value = JSON.parse(savedMatrix.value);
+        const saved = localStorage.getItem('savedMatrixA');
+        if (saved) {
+          matrixA.value = JSON.parse(saved);
           matrixSize.value = matrixA.value.length;
           alert('Matrix A loaded successfully!');
         } else {
           alert('No matrix saved yet.');
         }
       },
-      formatDecomposition(decomp) {
-        let result = '';
-        for (const [key, value] of Object.entries(decomp)) {
-          result += `${key}:\n`;
-          result += math.format(value, { precision: 4 }) + '\n\n';
-        }
-        return result;
-      }
     };
   }
 };
