@@ -1,12 +1,16 @@
 import * as math from 'mathjs'
 
+function getErrorMessage(error) {
+  return error instanceof Error ? error.message : String(error);
+}
+
 export function useMatrixOperations(props, emit) {
   async function calculateDeterminant() {
     try {
       const det = math.det(props.matrixA)
       emit('determinant', det)
     } catch (error) {
-      console.error('Error calculating determinant:', error)
+      emit('error', `Determinant calculation failed: ${getErrorMessage(error)}`);
     }
   }
 
@@ -15,7 +19,7 @@ export function useMatrixOperations(props, emit) {
       const result = math.add(props.matrixA, props.matrixB)
       emit('operation-result', result)
     } catch (error) {
-      console.error('Error adding matrices:', error)
+      emit('error', `Matrix addition failed: ${getErrorMessage(error)}`);
     }
   }
 
@@ -24,7 +28,7 @@ export function useMatrixOperations(props, emit) {
       const result = math.subtract(props.matrixA, props.matrixB)
       emit('operation-result', result)
     } catch (error) {
-      console.error('Error subtracting matrices:', error)
+      emit('error', `Matrix subtraction failed: ${getErrorMessage(error)}`);
     }
   }
 
@@ -33,7 +37,7 @@ export function useMatrixOperations(props, emit) {
       const result = math.multiply(props.matrixA, props.matrixB)
       emit('operation-result', result)
     } catch (error) {
-      console.error('Error multiplying matrices:', error)
+      emit('error', `Matrix multiplication failed: ${getErrorMessage(error)}`);
     }
   }
 
@@ -43,7 +47,7 @@ export function useMatrixOperations(props, emit) {
       const solution = math.lusolve(props.matrixA, b).toArray().flat()
       emit('solution', solution)
     } catch (error) {
-      console.error('Error solving equations:', error)
+      emit('error', `Failed to solve linear equations: ${getErrorMessage(error)}`);
     }
   }
 
@@ -56,7 +60,7 @@ export function useMatrixOperations(props, emit) {
       ).join(', ')
       emit('eigenvalues', eigenvalues)
     } catch (error) {
-      console.error('Error calculating eigenvalues:', error)
+      emit('error', `Eigenvalue calculation failed: ${getErrorMessage(error)}`);
     }
   }
 
@@ -70,7 +74,7 @@ export function useMatrixOperations(props, emit) {
       }
       emit('decomposition', { type: 'lu', data: lu })
     } catch (error) {
-      console.error('Error performing LU decomposition:', error)
+      emit('error', `LU decomposition failed: ${getErrorMessage(error)}`);
     }
   }
 
@@ -83,7 +87,7 @@ export function useMatrixOperations(props, emit) {
       }
       emit('decomposition', { type: 'qr', data: qr })
     } catch (error) {
-      console.error('Error performing QR decomposition:', error)
+      emit('error', `QR decomposition failed: ${getErrorMessage(error)}`);
     }
   }
 

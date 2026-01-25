@@ -59,7 +59,8 @@ const emit = defineEmits([
   'operation-result',
   'solution',
   'eigenvalues',
-  'decomposition'
+  'decomposition',
+  'error'
 ])
 
 const { 
