@@ -45,33 +45,83 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
-import { useMatrixOperations } from '../composables/useMatrixOperations'
+import { defineProps, defineEmits } from 'vue';
+import { useMatrixOperations } from '../composables/useMatrixOperations';
 
 const props = defineProps({
   matrixA: Array,
   matrixB: Array,
-  vectorB: Array
-})
+  vectorB: Array,
+});
 
 const emit = defineEmits([
   'determinant',
   'operation-result',
   'solution',
   'eigenvalues',
-  'decomposition'
-])
+  'decomposition',
+  'error',
+]);
 
-const { 
-  calculateDeterminant,
-  addMatrices,
-  subtractMatrices,
-  multiplyMatrices,
-  solveLinearEquations,
-  calculateEigenvalues,
-  luDecomposition,
-  qrDecomposition
-} = useMatrixOperations(props, emit)
+const {
+  calculateDeterminant: calcDet,
+  addMatrices: add,
+  subtractMatrices: subtract,
+  multiplyMatrices: multiply,
+  solveLinearEquations: solve,
+  calculateEigenvalues: eigs,
+  luDecomposition: lu,
+  qrDecomposition: qr,
+} = useMatrixOperations();
+
+const handleOperation = (operation, ...args) => {
+  const result = operation(...args);
+  if (result.error) {
+    emit('error', result.error);
+  } else {
+    return result.data;
+  }
+};
+
+const calculateDeterminant = () => {
+  const data = handleOperation(calcDet, props.matrixA);
+  if (data) emit('determinant', data);
+};
+
+const addMatrices = () => {
+  const data = handleOperation(add, props.matrixA, props.matrixB);
+  if (data) emit('operation-result', data);
+};
+
+const subtractMatrices = () => {
+  const data = handleOperation(subtract, props.matrixA, props.matrixB);
+  if (data) emit('operation-result', data);
+};
+
+const multiplyMatrices = () => {
+  const data = handleOperation(multiply, props.matrixA, props.matrixB);
+  if (data) emit('operation-result', data);
+};
+
+const solveLinearEquations = () => {
+  const data = handleOperation(solve, props.matrixA, props.vectorB);
+  if (data) emit('solution', data);
+};
+
+const calculateEigenvalues = () => {
+  const data = handleOperation(eigs, props.matrixA);
+  if (data) emit('eigenvalues', data);
+};
+
+const luDecomposition = () => {
+  const data = handleOperation(lu, props.matrixA);
+  if (data) emit('decomposition', data);
+};
+
+const qrDecomposition = () => {
+  const data = handleOperation(qr, props.matrixA);
+  if (data) emit('decomposition', data);
+};
 </script>
 
 <style scoped>
