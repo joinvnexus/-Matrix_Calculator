@@ -1,91 +1,91 @@
-import * as math from 'mathjs'
+import * as math from 'mathjs';
 
-export function useMatrixOperations(props, emit) {
-  async function calculateDeterminant() {
+export function useMatrixOperations() {
+  const calculateDeterminant = (matrixA) => {
     try {
-      const det = math.det(props.matrixA)
-      emit('determinant', det)
+      const det = math.det(matrixA);
+      return { data: det };
     } catch (error) {
-      console.error('Error calculating determinant:', error)
+      return { error: 'Error calculating determinant.' };
     }
-  }
+  };
 
-  async function addMatrices() {
+  const addMatrices = (matrixA, matrixB) => {
     try {
-      const result = math.add(props.matrixA, props.matrixB)
-      emit('operation-result', result)
+      const result = math.add(matrixA, matrixB);
+      return { data: result };
     } catch (error) {
-      console.error('Error adding matrices:', error)
+      return { error: 'Error adding matrices.' };
     }
-  }
+  };
 
-  async function subtractMatrices() {
+  const subtractMatrices = (matrixA, matrixB) => {
     try {
-      const result = math.subtract(props.matrixA, props.matrixB)
-      emit('operation-result', result)
+      const result = math.subtract(matrixA, matrixB);
+      return { data: result };
     } catch (error) {
-      console.error('Error subtracting matrices:', error)
+      return { error: 'Error subtracting matrices.' };
     }
-  }
+  };
 
-  async function multiplyMatrices() {
+  const multiplyMatrices = (matrixA, matrixB) => {
     try {
-      const result = math.multiply(props.matrixA, props.matrixB)
-      emit('operation-result', result)
+      const result = math.multiply(matrixA, matrixB);
+      return { data: result };
     } catch (error) {
-      console.error('Error multiplying matrices:', error)
+      return { error: 'Error multiplying matrices.' };
     }
-  }
+  };
 
-  async function solveLinearEquations() {
+  const solveLinearEquations = (matrixA, vectorB) => {
     try {
-      const b = math.matrix(props.vectorB.map(x => [x]))
-      const solution = math.lusolve(props.matrixA, b).toArray().flat()
-      emit('solution', solution)
+      const b = math.matrix(vectorB.map(x => [x]));
+      const solution = math.lusolve(matrixA, b).toArray().flat();
+      return { data: solution };
     } catch (error) {
-      console.error('Error solving equations:', error)
+      return { error: 'Error solving equations. The matrix may be singular.' };
     }
-  }
+  };
 
-  async function calculateEigenvalues() {
+  const calculateEigenvalues = (matrixA) => {
     try {
-      const result = math.eigs(props.matrixA)
-      const eigenvalues = result.values.map(v => 
-        typeof v === 'number' ? v.toFixed(4) : 
+      const result = math.eigs(matrixA);
+      const eigenvalues = result.values.map(v =>
+        typeof v === 'number' ? v.toFixed(4) :
         `${v.re.toFixed(4)} + ${v.im.toFixed(4)}i`
-      ).join(', ')
-      emit('eigenvalues', eigenvalues)
+      ).join(', ');
+      return { data: eigenvalues };
     } catch (error) {
-      console.error('Error calculating eigenvalues:', error)
+      return { error: 'Error calculating eigenvalues.' };
     }
-  }
+  };
 
-  async function luDecomposition() {
+  const luDecomposition = (matrixA) => {
     try {
-      const result = math.lup(props.matrixA)
+      const result = math.lup(matrixA);
       const lu = {
         L: result.L.toArray(),
         U: result.U.toArray(),
         P: result.p.map(i => i + 1)
-      }
-      emit('decomposition', { type: 'lu', data: lu })
+      };
+      return { data: { type: 'lu', data: lu } };
     } catch (error) {
-      console.error('Error performing LU decomposition:', error)
+      return { error: 'Error performing LU decomposition.' };
     }
-  }
+  };
 
-  async function qrDecomposition() {
+  const qrDecomposition = (matrixA) => {
     try {
-      const result = math.qr(props.matrixA)
+      const result = math.qr(matrixA);
       const qr = {
         Q: result.Q.toArray(),
         R: result.R.toArray()
-      }
-      emit('decomposition', { type: 'qr', data: qr })
+      };
+      return { data: { type: 'qr', data: qr } };
     } catch (error) {
-      console.error('Error performing QR decomposition:', error)
+      return { error: 'Error performing QR decomposition.' };
     }
-  }
+  };
 
   return {
     calculateDeterminant,
@@ -95,6 +95,6 @@ export function useMatrixOperations(props, emit) {
     solveLinearEquations,
     calculateEigenvalues,
     luDecomposition,
-    qrDecomposition
-  }
+    qrDecomposition,
+  };
 }

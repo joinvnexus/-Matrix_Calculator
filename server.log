@@ -92,38 +92,38 @@
 [2K[1A[2K[G[10%] building (0/0 modules)
 [2K[1A[2K[G[10%] building (import loader babel-loader/lib/index.js)
 [2K[1A[2K[G[10%] building (0/1 modules)
-[2K[1A[2K[G[24%] building (1/4 modules)
+[2K[1A[2K[G[10%] building (1/7 modules)
+[2K[1A[2K[G[24%] building (1/7 modules)
 [2K[1A[2K[G[24%] building (import loader vue-loader/dist/index.js)
-[2K[1A[2K[G[24%] building (3/17 modules)
+[2K[1A[2K[G[24%] building (3/16 modules)
 [2K[1A[2K[G[24%] building (import loader vue-style-loader/index.js)
 [2K[1A[2K[G[24%] building (import loader css-loader/dist/cjs.js)
 [2K[1A[2K[G[24%] building (import loader postcss-loader/dist/cjs.js)
 [2K[1A[2K[G[24%] building (3/18 modules)
 [2K[1A[2K[G[24%] building (import loader vue-loader/dist/pitcher.js)
-[2K[1A[2K[G[24%] building (7/29 modules)
+[2K[1A[2K[G[24%] building (7/31 modules)
 [2K[1A[2K[G[24%] building (import loader vue-loader/dist/templateLoader.js)
-[2K[1A[2K[G[24%] building (7/29 modules)
-[2K[1A[2K[G[24%] building (22/68 modules)
+[2K[1A[2K[G[24%] building (7/31 modules)
+[2K[1A[2K[G[24%] building (21/72 modules)
 [2K[1A[2K[G[24%] building (import loader vue-loader/dist/stylePostLoader.js)
-[2K[1A[2K[G[24%] building (29/93 modules)
-[2K[1A[2K[G[38%] building (32/93 modules)
+[2K[1A[2K[G[24%] building (25/75 modules)
+[2K[1A[2K[G[38%] building (30/92 modules)
 [1m[33m[@vue/compiler-sfc][0m[33m `defineProps` is a compiler macro and no longer needs to be imported.[0m
 
 [1m[33m[@vue/compiler-sfc][0m[33m `defineEmits` is a compiler macro and no longer needs to be imported.[0m
 
-[2K[1A[2K[G[38%] building (100/152 modules)
-[2K[1A[2K[G[51%] building (113/152 modules)
-[2K[1A[2K[G[51%] building (154/183 modules)
-[2K[1A[2K[G[51%] building (164/849 modules)
-[2K[1A[2K[G[51%] building (180/877 modules)
-[2K[1A[2K[G[51%] building (197/890 modules)
-[2K[1A[2K[G[51%] building (220/913 modules)
-[2K[1A[2K[G[51%] building (226/1157 modules)
-[2K[1A[2K[G[51%] building (254/1157 modules)
-[2K[1A[2K[G[51%] building (266/1157 modules)
-[2K[1A[2K[G[51%] building (700/1160 modules)
-[2K[1A[2K[G[51%] building (1000/1183 modules)
-[2K[1A[2K[G[65%] building (1213/1213 modules)
+[2K[1A[2K[G[38%] building (100/153 modules)
+[2K[1A[2K[G[51%] building (112/153 modules)
+[2K[1A[2K[G[51%] building (148/180 modules)
+[2K[1A[2K[G[51%] building (160/851 modules)
+[2K[1A[2K[G[51%] building (174/880 modules)
+[2K[1A[2K[G[51%] building (200/892 modules)
+[2K[1A[2K[G[51%] building (226/914 modules)
+[2K[1A[2K[G[51%] building (244/1158 modules)
+[2K[1A[2K[G[51%] building (268/1158 modules)
+[2K[1A[2K[G[51%] building (700/1169 modules)
+[2K[1A[2K[G[51%] building (1000/1184 modules)
+[2K[1A[2K[G[65%] building (1214/1214 modules)
 [2K[1A[2K[G[65%] building
 [2K[1A[2K[G[69%] building (finish)
 [2K[1A[2K[G[70%] sealing (finish module graph)
@@ -205,12 +205,12 @@ onPlugin)
 [2K[1A[2K[G[94%] sealing (after seal)
 [2K[1A[2K[G[95%] emitting (emit)
 [2K[1A[2K[G[98%] emitting (after emit)
-[2K[1A[2K[GBuild finished at 10:02:28 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:28 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:28 by 0.000s
-[2K[1A[2K[G DONE  Compiled successfully in 17406ms10:02:28 AM
+[2K[1A[2K[GBuild finished at 10:07:20 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:20 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:20 by 0.000s
+[2K[1A[2K[G DONE  Compiled successfully in 15592ms10:07:20 AM
 
-Build finished at 10:02:29 by 0.000s
+Build finished at 10:07:20 by 0.000s
 [2K[1A[2K[G
   App running at:
   - Local:   http://localhost:8080/
@@ -219,14 +219,14 @@ Build finished at 10:02:29 by 0.000s
   Note that the development build is not optimized.
   To create a production build, run npm run build.
 
-Build finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
+Build finished at 10:07:20 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:20 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:20 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:20 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:20 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:20 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:20 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:20 by 0.000s
 [2K[1A[2K[G
 [2K[1A[2K[G[1%] cache (end idle)
 [2K[1A[2K[G[3%] setup (watch run)
@@ -316,13 +316,13 @@ Build finished at 10:02:29 by 0.000s
 [2K[1A[2K[G[9%] setup (compilation)
 [2K[1A[2K[G[10%] building
 [2K[1A[2K[G[10%] building (0/0 modules)
-[2K[1A[2K[G[24%] building (1/3 modules)
-[2K[1A[2K[G[38%] building (20/8 modules)
+[2K[1A[2K[G[24%] building (7/6 modules)
+[2K[1A[2K[G[38%] building (33/9 modules)
 [2K[1A[2K[G[38%] building (import loader css-loader/dist/cjs.js)
 [2K[1A[2K[G[38%] building (import loader postcss-loader/dist/cjs.js)
-[2K[1A[2K[G[38%] building (44/11 modules)
-[2K[1A[2K[G[51%] building (148/18 modules)
-[2K[1A[2K[G[65%] building (1213/31 modules)
+[2K[1A[2K[G[38%] building (34/9 modules)
+[2K[1A[2K[G[51%] building (148/15 modules)
+[2K[1A[2K[G[65%] building (1214/32 modules)
 [2K[1A[2K[G[65%] building
 [2K[1A[2K[G[69%] building (finish)
 [2K[1A[2K[G[70%] sealing (finish module graph)
@@ -404,26 +404,26 @@ onPlugin)
 [2K[1A[2K[G[94%] sealing (after seal)
 [2K[1A[2K[G[95%] emitting (emit)
 [2K[1A[2K[G[98%] emitting (after emit)
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[G DONE  Compiled successfully in 278ms10:02:29 AM
+[2K[1A[2K[GBuild finished at 10:07:21 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:21 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:21 by 0.000s
+[2K[1A[2K[G DONE  Compiled successfully in 296ms10:07:21 AM
 
-Build finished at 10:02:29 by 0.000s
+Build finished at 10:07:21 by 0.000s
 [2K[1A[2K[G
   App running at:
   - Local:   http://localhost:8080/
   - Network: http://192.168.0.2:8080/
 
-Build finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[GBuild finished at 10:02:29 by 0.000s
-[2K[1A[2K[G WAIT  Compiling...10:04:34 AM
+Build finished at 10:07:21 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:21 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:21 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:21 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:21 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:21 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:21 by 0.000s
+[2K[1A[2K[GBuild finished at 10:07:21 by 0.000s
+[2K[1A[2K[G WAIT  Compiling...10:10:07 AM
 
 Compiling...
 
@@ -518,17 +518,12 @@ Compiling...
 [2K[1A[2K[G[24%] building (1/4 modules)
 [2K[1A[2K[G[24%] building (import loader css-loader/dist/cjs.js)
 [2K[1A[2K[G[24%] building (import loader postcss-loader/dist/cjs.js)
-[2K[1A[2K[G[24%] building (26/11 modules)
+[2K[1A[2K[G[24%] building (27/11 modules)
 [2K[1A[2K[G[38%] building (37/11 modules)
-[2K[1A[2K[G[51%] building (137/11 modules)
-[2K[1A[2K[G[51%] building (import loader vue-loader/dist/index.js)
-[2K[1A[2K[G[51%] building (148/12 modules)
+[2K[1A[2K[G[51%] building (137/18 modules)
 [2K[1A[2K[G[51%] building (import loader babel-loader/lib/index.js)
-[2K[1A[2K[G[51%] building (import loader vue-loader/dist/templateLoader.js)
-[2K[1A[2K[G[51%] building (148/19 modules)
-[2K[1A[2K[G[51%] building (import loader vue-loader/dist/stylePostLoader.js)
-[2K[1A[2K[G[51%] building (148/20 modules)
-[2K[1A[2K[G[65%] building (1213/34 modules)
+[2K[1A[2K[G[51%] building (1170/29 modules)
+[2K[1A[2K[G[65%] building (1214/33 modules)
 [2K[1A[2K[G[65%] building
 [2K[1A[2K[G[69%] building (finish)
 [2K[1A[2K[G[70%] sealing (finish module graph)
@@ -610,38 +605,26 @@ onPlugin)
 [2K[1A[2K[G[94%] sealing (after seal)
 [2K[1A[2K[G[95%] emitting (emit)
 [2K[1A[2K[G[98%] emitting (after emit)
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[G ERROR  Failed to compile with 1 error10:04:35 AM
+[2K[1A[2K[GBuild finished at 10:10:07 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:07 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:07 by 0.000s
+[2K[1A[2K[G DONE  Compiled successfully in 364ms10:10:07 AM
 
-[eslint]
-/app/src/components/MatrixInput.vue
-  174:11  error  'savedMatrix' is assigned a value but never used  no-unused-vars
+Build finished at 10:10:07 by 0.000s
+[2K[1A[2K[G
+  App running at:
+  - Local:   http://localhost:8080/
+  - Network: http://192.168.0.2:8080/
 
-✖ 1 problem (1 error, 0 warnings)
-
-
-You may use special comments to disable some warnings.
-Use // eslint-disable-next-line to ignore the next line.
-Use /* eslint-disable */ to ignore all warnings in a file.
-Build finished at 10:04:35 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:35 by 0.000s
-[2K[1A[2K[GERROR in [eslint]
-/app/src/components/MatrixInput.vue
-  174:11  error  'savedMatrix' is assigned a value but never used  no-unused-vars
-
-✖ 1 problem (1 error, 0 warnings)
-
-webpack compiled with 1 error
- WAIT  Compiling...10:04:43 AM
+Build finished at 10:10:07 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:07 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:07 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:07 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:07 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:07 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:07 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:07 by 0.000s
+[2K[1A[2K[G WAIT  Compiling...10:10:10 AM
 
 Compiling...
 
@@ -733,20 +716,15 @@ Compiling...
 [2K[1A[2K[G[9%] setup (compilation)
 [2K[1A[2K[G[10%] building
 [2K[1A[2K[G[10%] building (0/0 modules)
-[2K[1A[2K[G[24%] building (7/5 modules)
-[2K[1A[2K[G[38%] building (34/8 modules)
+[2K[1A[2K[G[24%] building (7/6 modules)
+[2K[1A[2K[G[38%] building (34/9 modules)
 [2K[1A[2K[G[38%] building (import loader css-loader/dist/cjs.js)
 [2K[1A[2K[G[38%] building (import loader postcss-loader/dist/cjs.js)
-[2K[1A[2K[G[38%] building (61/11 modules)
-[2K[1A[2K[G[51%] building (148/11 modules)
-[2K[1A[2K[G[51%] building (import loader vue-loader/dist/index.js)
-[2K[1A[2K[G[51%] building (148/12 modules)
+[2K[1A[2K[G[38%] building (34/9 modules)
+[2K[1A[2K[G[51%] building (148/15 modules)
 [2K[1A[2K[G[51%] building (import loader babel-loader/lib/index.js)
-[2K[1A[2K[G[51%] building (import loader vue-loader/dist/templateLoader.js)
-[2K[1A[2K[G[51%] building (148/19 modules)
-[2K[1A[2K[G[51%] building (import loader vue-loader/dist/stylePostLoader.js)
-[2K[1A[2K[G[51%] building (148/20 modules)
-[2K[1A[2K[G[65%] building (1213/34 modules)
+[2K[1A[2K[G[51%] building (1188/30 modules)
+[2K[1A[2K[G[65%] building (1214/33 modules)
 [2K[1A[2K[G[65%] building
 [2K[1A[2K[G[69%] building (finish)
 [2K[1A[2K[G[70%] sealing (finish module graph)
@@ -828,26 +806,26 @@ onPlugin)
 [2K[1A[2K[G[94%] sealing (after seal)
 [2K[1A[2K[G[95%] emitting (emit)
 [2K[1A[2K[G[98%] emitting (after emit)
-[2K[1A[2K[GBuild finished at 10:04:44 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:44 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:44 by 0.000s
-[2K[1A[2K[G DONE  Compiled successfully in 418ms10:04:44 AM
+[2K[1A[2K[GBuild finished at 10:10:11 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:11 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:11 by 0.000s
+[2K[1A[2K[G DONE  Compiled successfully in 304ms10:10:11 AM
 
-Build finished at 10:04:44 by 0.000s
+Build finished at 10:10:11 by 0.000s
 [2K[1A[2K[G
   App running at:
   - Local:   http://localhost:8080/
   - Network: http://192.168.0.2:8080/
 
-Build finished at 10:04:44 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:44 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:44 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:44 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:44 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:44 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:44 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:44 by 0.000s
-[2K[1A[2K[G WAIT  Compiling...10:04:51 AM
+Build finished at 10:10:11 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:11 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:11 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:11 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:11 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:11 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:11 by 0.000s
+[2K[1A[2K[GBuild finished at 10:10:11 by 0.000s
+[2K[1A[2K[G WAIT  Compiling...10:11:17 AM
 
 Compiling...
 
@@ -939,20 +917,15 @@ Compiling...
 [2K[1A[2K[G[9%] setup (compilation)
 [2K[1A[2K[G[10%] building
 [2K[1A[2K[G[10%] building (0/0 modules)
-[2K[1A[2K[G[24%] building (1/6 modules)
-[2K[1A[2K[G[24%] building (import loader css-loader/dist/cjs.js)
-[2K[1A[2K[G[24%] building (import loader postcss-loader/dist/cjs.js)
-[2K[1A[2K[G[24%] building (20/11 modules)
-[2K[1A[2K[G[38%] building (43/11 modules)
-[2K[1A[2K[G[51%] building (148/11 modules)
-[2K[1A[2K[G[51%] building (import loader vue-loader/dist/index.js)
-[2K[1A[2K[G[51%] building (148/12 modules)
+[2K[1A[2K[G[24%] building (5/4 modules)
+[2K[1A[2K[G[38%] building (14/4 modules)
+[2K[1A[2K[G[38%] building (import loader css-loader/dist/cjs.js)
+[2K[1A[2K[G[38%] building (import loader postcss-loader/dist/cjs.js)
+[2K[1A[2K[G[38%] building (42/11 modules)
+[2K[1A[2K[G[51%] building (129/15 modules)
 [2K[1A[2K[G[51%] building (import loader babel-loader/lib/index.js)
-[2K[1A[2K[G[51%] building (import loader vue-loader/dist/templateLoader.js)
-[2K[1A[2K[G[51%] building (148/19 modules)
-[2K[1A[2K[G[51%] building (import loader vue-loader/dist/stylePostLoader.js)
-[2K[1A[2K[G[51%] building (148/20 modules)
-[2K[1A[2K[G[65%] building (1213/34 modules)
+[2K[1A[2K[G[51%] building (1170/29 modules)
+[2K[1A[2K[G[65%] building (1214/33 modules)
 [2K[1A[2K[G[65%] building
 [2K[1A[2K[G[69%] building (finish)
 [2K[1A[2K[G[70%] sealing (finish module graph)
@@ -1034,23 +1007,28 @@ onPlugin)
 [2K[1A[2K[G[94%] sealing (after seal)
 [2K[1A[2K[G[95%] emitting (emit)
 [2K[1A[2K[G[98%] emitting (after emit)
-[2K[1A[2K[GBuild finished at 10:04:51 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:51 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:51 by 0.000s
-[2K[1A[2K[G DONE  Compiled successfully in 382ms10:04:51 AM
+[2K[1A[2K[GBuild finished at 10:11:17 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:17 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:17 by 0.000s
+[2K[1A[2K[G DONE  Compiled successfully in 351ms10:11:17 AM
 
-Build finished at 10:04:51 by 0.000s
+Build finished at 10:11:17 by 0.000s
 [2K[1A[2K[G
   App running at:
   - Local:   http://localhost:8080/
   - Network: http://192.168.0.2:8080/
 
-Build finished at 10:04:51 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:51 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:51 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:51 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:51 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:51 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:51 by 0.000s
-[2K[1A[2K[GBuild finished at 10:04:51 by 0.000s
+Build finished at 10:11:17 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:17 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:17 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:17 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:17 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:17 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:17 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:17 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:24 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:24 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:24 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:24 by 0.000s
+[2K[1A[2K[GBuild finished at 10:11:24 by 0.000s
 [2K[1A[2K[G

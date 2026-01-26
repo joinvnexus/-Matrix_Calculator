@@ -64,6 +64,7 @@
                       <td v-for="(val, j) in row" :key="j" class="p-1">
                         <input
                           v-model.number="matrixA[i][j]"
+                          @blur="validateCell(matrixA, i, j)"
                           type="number"
                           class="w-14 h-10 text-center text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                         >
@@ -84,6 +85,7 @@
                       <td v-for="(val, j) in row" :key="j" class="p-1">
                         <input
                           v-model.number="matrixB[i][j]"
+                          @blur="validateCell(matrixB, i, j)"
                           type="number"
                           class="w-14 h-10 text-center text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                         >
@@ -106,7 +108,30 @@
           @solution="handleSolution"
           @eigenvalues="handleEigenvalues"
           @decomposition="handleDecomposition"
+          @error="handleError"
         />
+
+        <!-- Notification Display -->
+        <div v-if="notification" class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md" role="alert">
+          <div class="flex">
+            <div class="py-1"><i class="fas fa-info-circle mr-3"></i></div>
+            <div>
+              <p class="font-bold">Notification</p>
+              <p class="text-sm">{{ notification }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Display -->
+        <div v-if="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md" role="alert">
+          <div class="flex">
+            <div class="py-1"><i class="fas fa-exclamation-circle mr-3"></i></div>
+            <div>
+              <p class="font-bold">An error occurred</p>
+              <p class="text-sm">{{ error }}</p>
+            </div>
+          </div>
+        </div>
 
         <!-- Results Section -->
         <div v-if="operationResult.length || determinant !== null || solution || eigenvalues || lu || qr" class="bg-white rounded-xl shadow-lg overflow-hidden mt-6">
@@ -166,48 +191,78 @@
 </template>
 
 <script>
-import { createApp, ref, watch } from 'vue';
 import * as math from 'mathjs';
 import OperationButtons from './OperationButtons.vue';
+import { useMatrixState } from '../composables/useMatrixState';
 
 export default {
   components: {
     OperationButtons,
   },
   setup() {
-    const matrixSize = ref(3);
-    const matrixA = ref(createMatrix(matrixSize.value));
-    const matrixB = ref(createMatrix(matrixSize.value));
-    const vectorB = ref(Array(matrixSize.value).fill(0));
-    const operationResult = ref([]);
-    const determinant = ref(null);
-    const solution = ref(null);
-    const eigenvalues = ref(null);
-    const lu = ref(null);
-    const qr = ref(null);
-    const savedMatrix = ref(null);
-    const error = ref(null);
+    const {
+      matrixSize,
+      matrixA,
+      matrixB,
+      vectorB,
+      operationResult,
+      determinant,
+      solution,
+      eigenvalues,
+      lu,
+      qr,
+      error,
+      notification,
+      resetResults,
+      saveMatrix,
+      loadMatrix,
+    } = useMatrixState();
 
-    function createMatrix(size) {
-      return Array.from({ length: size }, () => Array(size).fill(0));
+    function formatDecomposition(decomp) {
+      let result = '';
+      for (const [key, value] of Object.entries(decomp)) {
+        result += `${key}:\n`;
+        result += math.format(value, { precision: 4 }) + '\n\n';
+      }
+      return result;
     }
 
-    function resetResults() {
-      operationResult.value = [];
-      determinant.value = null;
-      solution.value = null;
-      eigenvalues.value = null;
-      lu.value = null;
-      qr.value = null;
-      error.value = null;
-    }
-
-    watch(matrixSize, (newSize) => {
-      matrixA.value = createMatrix(newSize);
-      matrixB.value = createMatrix(newSize);
-      vectorB.value = Array(newSize).fill(0);
+    const handleDeterminant = (det) => {
       resetResults();
-    });
+      determinant.value = det;
+    };
+
+    const handleOperationResult = (result) => {
+      resetResults();
+      operationResult.value = result;
+    };
+
+    const handleSolution = (sol) => {
+      resetResults();
+      solution.value = sol;
+    };
+
+    const handleEigenvalues = (eig) => {
+      resetResults();
+      eigenvalues.value = eig;
+    };
+
+    const handleDecomposition = ({ type, data }) => {
+      resetResults();
+      if (type === 'lu') lu.value = data;
+      else if (type === 'qr') qr.value = data;
+    };
+
+    const handleError = (errorMessage) => {
+      resetResults();
+      error.value = errorMessage;
+    };
+
+    const validateCell = (matrix, i, j) => {
+      if (typeof matrix[i][j] !== 'number' || isNaN(matrix[i][j])) {
+        matrix[i][j] = 0;
+      }
+    };
 
     return {
       matrixSize,
@@ -221,63 +276,20 @@ export default {
       lu,
       qr,
       error,
-      handleDeterminant(det) {
-        resetResults();
-        determinant.value = det;
-      },
-      handleOperationResult(result) {
-        resetResults();
-        operationResult.value = result;
-      },
-      handleSolution(sol) {
-        resetResults();
-        solution.value = sol;
-      },
-      handleEigenvalues(eig) {
-        resetResults();
-        eigenvalues.value = eig;
-      },
-      handleDecomposition({ type, data }) {
-        resetResults();
-        if (type === 'lu') {
-          lu.value = data;
-        } else if (type === 'qr') {
-          qr.value = data;
-        }
-      },
-      saveMatrix() {
-        savedMatrix.value = JSON.stringify(matrixA.value);
-        alert('Matrix A saved successfully!');
-      },
-      loadMatrix() {
-        if (savedMatrix.value) {
-          matrixA.value = JSON.parse(savedMatrix.value);
-          matrixSize.value = matrixA.value.length;
-          alert('Matrix A loaded successfully!');
-        } else {
-          alert('No matrix saved yet.');
-        }
-      },
-      formatDecomposition(decomp) {
-        let result = '';
-        for (const [key, value] of Object.entries(decomp)) {
-          result += `${key}:\n`;
-          result += math.format(value, { precision: 4 }) + '\n\n';
-        }
-        return result;
-      }
+      notification,
+      saveMatrix,
+      loadMatrix,
+      formatDecomposition,
+      handleDeterminant,
+      handleOperationResult,
+      handleSolution,
+      handleEigenvalues,
+      handleDecomposition,
+      handleError,
+      validateCell,
     };
-  }
+  },
 };
-
-const app = createApp({
-  template: '#app-template',
-  setup() {
-    return {};
-  }
-});
-
-app.mount('#app');
 </script>
 
 <style>
