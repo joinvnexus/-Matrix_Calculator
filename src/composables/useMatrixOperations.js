@@ -6,7 +6,7 @@ export function useMatrixOperations(props, emit) {
       const det = math.det(props.matrixA)
       emit('determinant', det)
     } catch (error) {
-      console.error('Error calculating determinant:', error)
+      emit('error', error.message)
     }
   }
 
@@ -15,7 +15,7 @@ export function useMatrixOperations(props, emit) {
       const result = math.add(props.matrixA, props.matrixB)
       emit('operation-result', result)
     } catch (error) {
-      console.error('Error adding matrices:', error)
+      emit('error', error.message)
     }
   }
 
@@ -24,7 +24,7 @@ export function useMatrixOperations(props, emit) {
       const result = math.subtract(props.matrixA, props.matrixB)
       emit('operation-result', result)
     } catch (error) {
-      console.error('Error subtracting matrices:', error)
+      emit('error', error.message)
     }
   }
 
@@ -33,7 +33,7 @@ export function useMatrixOperations(props, emit) {
       const result = math.multiply(props.matrixA, props.matrixB)
       emit('operation-result', result)
     } catch (error) {
-      console.error('Error multiplying matrices:', error)
+      emit('error', error.message)
     }
   }
 
@@ -43,7 +43,7 @@ export function useMatrixOperations(props, emit) {
       const solution = math.lusolve(props.matrixA, b).toArray().flat()
       emit('solution', solution)
     } catch (error) {
-      console.error('Error solving equations:', error)
+      emit('error', error.message)
     }
   }
 
@@ -56,7 +56,7 @@ export function useMatrixOperations(props, emit) {
       ).join(', ')
       emit('eigenvalues', eigenvalues)
     } catch (error) {
-      console.error('Error calculating eigenvalues:', error)
+      emit('error', error.message)
     }
   }
 
@@ -70,7 +70,7 @@ export function useMatrixOperations(props, emit) {
       }
       emit('decomposition', { type: 'lu', data: lu })
     } catch (error) {
-      console.error('Error performing LU decomposition:', error)
+      emit('error', error.message)
     }
   }
 
@@ -83,7 +83,16 @@ export function useMatrixOperations(props, emit) {
       }
       emit('decomposition', { type: 'qr', data: qr })
     } catch (error) {
-      console.error('Error performing QR decomposition:', error)
+      emit('error', error.message)
+    }
+  }
+
+  async function invertMatrix() {
+    try {
+      const result = math.inv(props.matrixA)
+      emit('operation-result', result)
+    } catch (error) {
+      emit('error', error.message)
     }
   }
 
@@ -95,6 +104,7 @@ export function useMatrixOperations(props, emit) {
     solveLinearEquations,
     calculateEigenvalues,
     luDecomposition,
-    qrDecomposition
+    qrDecomposition,
+    invertMatrix
   }
 }

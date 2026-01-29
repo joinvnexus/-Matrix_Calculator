@@ -27,6 +27,9 @@
         <button @click="calculateEigenvalues">
           <i class="fas fa-chart-line"></i> Eigenvalues (A)
         </button>
+        <button @click="invertMatrix">
+          <i class="fas fa-retweet"></i> Invert (A)
+        </button>
       </div>
     </div>
 
@@ -59,7 +62,8 @@ const emit = defineEmits([
   'operation-result',
   'solution',
   'eigenvalues',
-  'decomposition'
+  'decomposition',
+  'error'
 ])
 
 const { 
@@ -70,7 +74,8 @@ const {
   solveLinearEquations,
   calculateEigenvalues,
   luDecomposition,
-  qrDecomposition
+  qrDecomposition,
+  invertMatrix
 } = useMatrixOperations(props, emit)
 </script>
 
