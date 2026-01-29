@@ -92,6 +92,26 @@
                   </table>
                 </div>
               </div>
+
+              <!-- Vector B -->
+              <div class="flex-1">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center justify-center gap-2">
+                  <i class="fas fa-vector-square"></i> Vector b
+                </h3>
+                <div class="inline-block border-2 border-purple-500 rounded-lg p-3 bg-.050">
+                  <table class="mx-auto">
+                    <tr v-for="(val, i) in vectorB" :key="i">
+                      <td class="p-1">
+                        <input
+                          v-model.number="vectorB[i]"
+                          type="number"
+                          class="w-14 h-10 text-center text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition"
+                        >
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -106,7 +126,19 @@
           @solution="handleSolution"
           @eigenvalues="handleEigenvalues"
           @decomposition="handleDecomposition"
+          @error="handleError"
         />
+
+        <!-- Error Display -->
+        <div v-if="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md" role="alert">
+          <div class="flex">
+            <div class="py-1"><i class="fas fa-exclamation-triangle mr-3"></i></div>
+            <div>
+              <p class="font-bold">An error occurred:</p>
+              <p class="text-sm">{{ error }}</p>
+            </div>
+          </div>
+        </div>
 
         <!-- Results Section -->
         <div v-if="operationResult.length || determinant !== null || solution || eigenvalues || lu || qr" class="bg-white rounded-xl shadow-lg overflow-hidden mt-6">
@@ -166,7 +198,7 @@
 </template>
 
 <script>
-import { createApp, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import * as math from 'mathjs';
 import OperationButtons from './OperationButtons.vue';
 
@@ -185,8 +217,14 @@ export default {
     const eigenvalues = ref(null);
     const lu = ref(null);
     const qr = ref(null);
-    const savedMatrix = ref(null);
     const error = ref(null);
+
+    // Load matrix from localStorage on component mount
+    const saved = localStorage.getItem('savedMatrixA');
+    if (saved) {
+      matrixA.value = JSON.parse(saved);
+      matrixSize.value = matrixA.value.length;
+    }
 
     function createMatrix(size) {
       return Array.from({ length: size }, () => Array(size).fill(0));
@@ -245,13 +283,18 @@ export default {
           qr.value = data;
         }
       },
+      handleError(errorMessage) {
+        resetResults();
+        error.value = errorMessage;
+      },
       saveMatrix() {
-        savedMatrix.value = JSON.stringify(matrixA.value);
+        localStorage.setItem('savedMatrixA', JSON.stringify(matrixA.value));
         alert('Matrix A saved successfully!');
       },
       loadMatrix() {
-        if (savedMatrix.value) {
-          matrixA.value = JSON.parse(savedMatrix.value);
+        const saved = localStorage.getItem('savedMatrixA');
+        if (saved) {
+          matrixA.value = JSON.parse(saved);
           matrixSize.value = matrixA.value.length;
           alert('Matrix A loaded successfully!');
         } else {
@@ -270,14 +313,6 @@ export default {
   }
 };
 
-const app = createApp({
-  template: '#app-template',
-  setup() {
-    return {};
-  }
-});
-
-app.mount('#app');
 </script>
 
 <style>
