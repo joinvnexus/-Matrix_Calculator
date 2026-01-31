@@ -106,15 +106,23 @@
           @solution="handleSolution"
           @eigenvalues="handleEigenvalues"
           @decomposition="handleDecomposition"
+          @error="handleError"
         />
 
         <!-- Results Section -->
-        <div v-if="operationResult.length || determinant !== null || solution || eigenvalues || lu || qr" class="bg-white rounded-xl shadow-lg overflow-hidden mt-6">
+        <div v-if="operationResult.length || determinant !== null || solution || eigenvalues || lu || qr || error || info" class="bg-white rounded-xl shadow-lg overflow-hidden mt-6">
           <div class="bg-gray-800 text-white px-6 py-4 flex items-center">
             <i class="fas fa-list-alt mr-3"></i>
             <h2 class="text-lg font-semibold">Results</h2>
           </div>
           <div class="p-6 overflow-x-auto">
+            <div v-if="error" class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+              <p class="font-semibold">Error:</p>
+              <p>{{ error }}</p>
+            </div>
+            <div v-if="info" class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
+              <p>{{ info }}</p>
+            </div>
             <div v-if="determinant !== null" class="mb-4">
               <p class="font-semibold text-gray-800">Determinant of A:</p>
               <p class="text-lg font-mono text-blue-600">{{ determinant }}</p>
@@ -166,47 +174,37 @@
 </template>
 
 <script>
-import { createApp, ref, watch } from 'vue';
+import { watch } from 'vue';
 import * as math from 'mathjs';
 import OperationButtons from './OperationButtons.vue';
+import { useMatrixState } from '../composables/useMatrixState';
 
 export default {
   components: {
     OperationButtons,
   },
   setup() {
-    const matrixSize = ref(3);
-    const matrixA = ref(createMatrix(matrixSize.value));
-    const matrixB = ref(createMatrix(matrixSize.value));
-    const vectorB = ref(Array(matrixSize.value).fill(0));
-    const operationResult = ref([]);
-    const determinant = ref(null);
-    const solution = ref(null);
-    const eigenvalues = ref(null);
-    const lu = ref(null);
-    const qr = ref(null);
-    const savedMatrix = ref(null);
-    const error = ref(null);
-
-    function createMatrix(size) {
-      return Array.from({ length: size }, () => Array(size).fill(0));
-    }
-
-    function resetResults() {
-      operationResult.value = [];
-      determinant.value = null;
-      solution.value = null;
-      eigenvalues.value = null;
-      lu.value = null;
-      qr.value = null;
-      error.value = null;
-    }
+    const {
+      matrixSize,
+      matrixA,
+      matrixB,
+      vectorB,
+      operationResult,
+      determinant,
+      solution,
+      eigenvalues,
+      lu,
+      qr,
+      error,
+      info,
+      updateMatrixSize,
+      resetResults,
+      saveMatrix,
+      loadMatrix
+    } = useMatrixState();
 
     watch(matrixSize, (newSize) => {
-      matrixA.value = createMatrix(newSize);
-      matrixB.value = createMatrix(newSize);
-      vectorB.value = Array(newSize).fill(0);
-      resetResults();
+      updateMatrixSize(newSize);
     });
 
     return {
@@ -221,6 +219,7 @@ export default {
       lu,
       qr,
       error,
+      info,
       handleDeterminant(det) {
         resetResults();
         determinant.value = det;
@@ -245,19 +244,12 @@ export default {
           qr.value = data;
         }
       },
-      saveMatrix() {
-        savedMatrix.value = JSON.stringify(matrixA.value);
-        alert('Matrix A saved successfully!');
+      handleError(err) {
+        resetResults();
+        error.value = err;
       },
-      loadMatrix() {
-        if (savedMatrix.value) {
-          matrixA.value = JSON.parse(savedMatrix.value);
-          matrixSize.value = matrixA.value.length;
-          alert('Matrix A loaded successfully!');
-        } else {
-          alert('No matrix saved yet.');
-        }
-      },
+      saveMatrix,
+      loadMatrix,
       formatDecomposition(decomp) {
         let result = '';
         for (const [key, value] of Object.entries(decomp)) {
@@ -269,17 +261,8 @@ export default {
     };
   }
 };
-
-const app = createApp({
-  template: '#app-template',
-  setup() {
-    return {};
-  }
-});
-
-app.mount('#app');
 </script>
 
-<style>
-/* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); */
+<style scoped>
+/* Scoped styles for MatrixInput */
 </style>

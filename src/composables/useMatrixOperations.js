@@ -1,53 +1,58 @@
 import * as math from 'mathjs'
 
 export function useMatrixOperations(props, emit) {
-  async function calculateDeterminant() {
+  function calculateDeterminant() {
     try {
       const det = math.det(props.matrixA)
       emit('determinant', det)
     } catch (error) {
       console.error('Error calculating determinant:', error)
+      emit('error', 'Error calculating determinant: ' + error.message)
     }
   }
 
-  async function addMatrices() {
+  function addMatrices() {
     try {
       const result = math.add(props.matrixA, props.matrixB)
       emit('operation-result', result)
     } catch (error) {
       console.error('Error adding matrices:', error)
+      emit('error', 'Error adding matrices: ' + error.message)
     }
   }
 
-  async function subtractMatrices() {
+  function subtractMatrices() {
     try {
       const result = math.subtract(props.matrixA, props.matrixB)
       emit('operation-result', result)
     } catch (error) {
       console.error('Error subtracting matrices:', error)
+      emit('error', 'Error subtracting matrices: ' + error.message)
     }
   }
 
-  async function multiplyMatrices() {
+  function multiplyMatrices() {
     try {
       const result = math.multiply(props.matrixA, props.matrixB)
       emit('operation-result', result)
     } catch (error) {
       console.error('Error multiplying matrices:', error)
+      emit('error', 'Error multiplying matrices: ' + error.message)
     }
   }
 
-  async function solveLinearEquations() {
+  function solveLinearEquations() {
     try {
       const b = math.matrix(props.vectorB.map(x => [x]))
       const solution = math.lusolve(props.matrixA, b).toArray().flat()
       emit('solution', solution)
     } catch (error) {
       console.error('Error solving equations:', error)
+      emit('error', 'Error solving equations: ' + error.message)
     }
   }
 
-  async function calculateEigenvalues() {
+  function calculateEigenvalues() {
     try {
       const result = math.eigs(props.matrixA)
       const eigenvalues = result.values.map(v => 
@@ -57,10 +62,11 @@ export function useMatrixOperations(props, emit) {
       emit('eigenvalues', eigenvalues)
     } catch (error) {
       console.error('Error calculating eigenvalues:', error)
+      emit('error', 'Error calculating eigenvalues: ' + error.message)
     }
   }
 
-  async function luDecomposition() {
+  function luDecomposition() {
     try {
       const result = math.lup(props.matrixA)
       const lu = {
@@ -71,10 +77,11 @@ export function useMatrixOperations(props, emit) {
       emit('decomposition', { type: 'lu', data: lu })
     } catch (error) {
       console.error('Error performing LU decomposition:', error)
+      emit('error', 'Error performing LU decomposition: ' + error.message)
     }
   }
 
-  async function qrDecomposition() {
+  function qrDecomposition() {
     try {
       const result = math.qr(props.matrixA)
       const qr = {
@@ -84,6 +91,7 @@ export function useMatrixOperations(props, emit) {
       emit('decomposition', { type: 'qr', data: qr })
     } catch (error) {
       console.error('Error performing QR decomposition:', error)
+      emit('error', 'Error performing QR decomposition: ' + error.message)
     }
   }
 
