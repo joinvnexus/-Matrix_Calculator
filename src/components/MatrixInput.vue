@@ -93,6 +93,31 @@
                 </div>
               </div>
             </div>
+
+            <!-- Vector B Container (for Linear Equations) -->
+            <div class="mt-8 pt-6 border-t border-gray-100">
+              <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center justify-center gap-2">
+                <i class="fas fa-arrow-right"></i> Vector b (for Ax = b)
+              </h3>
+              <div class="flex flex-wrap justify-center gap-3">
+                <div v-for="(val, index) in vectorB" :key="index" class="flex flex-col items-center">
+                  <label class="text-xs text-gray-500 mb-1">b{{ index + 1 }}</label>
+                  <input
+                    v-model.number="vectorB[index]"
+                    type="number"
+                    class="w-16 h-10 text-center text-gray-800 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Display -->
+        <div v-if="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-md animate-pulse">
+          <div class="flex items-center">
+            <i class="fas fa-exclamation-triangle mr-3"></i>
+            <p class="font-bold">Error: {{ error }}</p>
           </div>
         </div>
 
@@ -106,6 +131,7 @@
           @solution="handleSolution"
           @eigenvalues="handleEigenvalues"
           @decomposition="handleDecomposition"
+          @error="(msg) => { error = msg }"
         />
 
         <!-- Results Section -->
@@ -165,121 +191,101 @@
   </div>
 </template>
 
-<script>
-import { createApp, ref, watch } from 'vue';
+<script setup>
+import { ref, watch } from 'vue';
 import * as math from 'mathjs';
 import OperationButtons from './OperationButtons.vue';
 
-export default {
-  components: {
-    OperationButtons,
-  },
-  setup() {
-    const matrixSize = ref(3);
-    const matrixA = ref(createMatrix(matrixSize.value));
-    const matrixB = ref(createMatrix(matrixSize.value));
-    const vectorB = ref(Array(matrixSize.value).fill(0));
-    const operationResult = ref([]);
-    const determinant = ref(null);
-    const solution = ref(null);
-    const eigenvalues = ref(null);
-    const lu = ref(null);
-    const qr = ref(null);
-    const savedMatrix = ref(null);
-    const error = ref(null);
+const matrixSize = ref(3);
 
-    function createMatrix(size) {
-      return Array.from({ length: size }, () => Array(size).fill(0));
-    }
+function createMatrix(size) {
+  return Array.from({ length: size }, () => Array(size).fill(0));
+}
 
-    function resetResults() {
-      operationResult.value = [];
-      determinant.value = null;
-      solution.value = null;
-      eigenvalues.value = null;
-      lu.value = null;
-      qr.value = null;
-      error.value = null;
-    }
+const matrixA = ref(createMatrix(matrixSize.value));
+const matrixB = ref(createMatrix(matrixSize.value));
+const vectorB = ref(Array(matrixSize.value).fill(0));
+const operationResult = ref([]);
+const determinant = ref(null);
+const solution = ref(null);
+const eigenvalues = ref(null);
+const lu = ref(null);
+const qr = ref(null);
+const savedMatrix = ref(null);
+const error = ref(null);
 
-    watch(matrixSize, (newSize) => {
-      matrixA.value = createMatrix(newSize);
-      matrixB.value = createMatrix(newSize);
-      vectorB.value = Array(newSize).fill(0);
-      resetResults();
-    });
+function resetResults() {
+  operationResult.value = [];
+  determinant.value = null;
+  solution.value = null;
+  eigenvalues.value = null;
+  lu.value = null;
+  qr.value = null;
+  error.value = null;
+}
 
-    return {
-      matrixSize,
-      matrixA,
-      matrixB,
-      vectorB,
-      operationResult,
-      determinant,
-      solution,
-      eigenvalues,
-      lu,
-      qr,
-      error,
-      handleDeterminant(det) {
-        resetResults();
-        determinant.value = det;
-      },
-      handleOperationResult(result) {
-        resetResults();
-        operationResult.value = result;
-      },
-      handleSolution(sol) {
-        resetResults();
-        solution.value = sol;
-      },
-      handleEigenvalues(eig) {
-        resetResults();
-        eigenvalues.value = eig;
-      },
-      handleDecomposition({ type, data }) {
-        resetResults();
-        if (type === 'lu') {
-          lu.value = data;
-        } else if (type === 'qr') {
-          qr.value = data;
-        }
-      },
-      saveMatrix() {
-        savedMatrix.value = JSON.stringify(matrixA.value);
-        alert('Matrix A saved successfully!');
-      },
-      loadMatrix() {
-        if (savedMatrix.value) {
-          matrixA.value = JSON.parse(savedMatrix.value);
-          matrixSize.value = matrixA.value.length;
-          alert('Matrix A loaded successfully!');
-        } else {
-          alert('No matrix saved yet.');
-        }
-      },
-      formatDecomposition(decomp) {
-        let result = '';
-        for (const [key, value] of Object.entries(decomp)) {
-          result += `${key}:\n`;
-          result += math.format(value, { precision: 4 }) + '\n\n';
-        }
-        return result;
-      }
-    };
+watch(matrixSize, (newSize) => {
+  if (typeof newSize !== 'number') return;
+  const size = Math.max(1, Math.min(10, newSize));
+  matrixA.value = createMatrix(size);
+  matrixB.value = createMatrix(size);
+  vectorB.value = Array(size).fill(0);
+  resetResults();
+});
+
+const handleDeterminant = (det) => {
+  resetResults();
+  determinant.value = det;
+};
+
+const handleOperationResult = (result) => {
+  resetResults();
+  operationResult.value = result;
+};
+
+const handleSolution = (sol) => {
+  resetResults();
+  solution.value = sol;
+};
+
+const handleEigenvalues = (eig) => {
+  resetResults();
+  eigenvalues.value = eig;
+};
+
+const handleDecomposition = ({ type, data }) => {
+  resetResults();
+  if (type === 'lu') {
+    lu.value = data;
+  } else if (type === 'qr') {
+    qr.value = data;
   }
 };
 
-const app = createApp({
-  template: '#app-template',
-  setup() {
-    return {};
-  }
-});
+const saveMatrix = () => {
+  savedMatrix.value = JSON.stringify(matrixA.value);
+  alert('Matrix A saved successfully!');
+};
 
-app.mount('#app');
+const loadMatrix = () => {
+  if (savedMatrix.value) {
+    matrixA.value = JSON.parse(savedMatrix.value);
+    matrixSize.value = matrixA.value.length;
+    alert('Matrix A loaded successfully!');
+  } else {
+    alert('No matrix saved yet.');
+  }
+};
+
+const formatDecomposition = (decomp) => {
+  let result = '';
+  for (const [key, value] of Object.entries(decomp)) {
+    result += `${key}:\n`;
+    result += math.format(value, { precision: 4 }) + '\n\n';
+  }
+  return result;
+};
 </script>
 
-<style>
-/* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); */
+<style scoped>
 </style>
