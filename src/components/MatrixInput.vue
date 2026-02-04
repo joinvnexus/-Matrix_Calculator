@@ -106,7 +106,19 @@
           @solution="handleSolution"
           @eigenvalues="handleEigenvalues"
           @decomposition="handleDecomposition"
+          @error="handleError"
         />
+
+        <!-- Error Section -->
+        <div v-if="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-md mt-6 flex items-center justify-between">
+          <div class="flex items-center">
+            <i class="fas fa-exclamation-circle mr-3 text-xl"></i>
+            <p class="font-medium">{{ error }}</p>
+          </div>
+          <button @click="error = null" class="text-red-700 hover:text-red-900">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
 
         <!-- Results Section -->
         <div v-if="operationResult.length || determinant !== null || solution || eigenvalues || lu || qr" class="bg-white rounded-xl shadow-lg overflow-hidden mt-6">
@@ -166,7 +178,7 @@
 </template>
 
 <script>
-import { createApp, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import * as math from 'mathjs';
 import OperationButtons from './OperationButtons.vue';
 
@@ -245,6 +257,10 @@ export default {
           qr.value = data;
         }
       },
+      handleError(err) {
+        resetResults();
+        error.value = err;
+      },
       saveMatrix() {
         savedMatrix.value = JSON.stringify(matrixA.value);
         alert('Matrix A saved successfully!');
@@ -269,15 +285,6 @@ export default {
     };
   }
 };
-
-const app = createApp({
-  template: '#app-template',
-  setup() {
-    return {};
-  }
-});
-
-app.mount('#app');
 </script>
 
 <style>
