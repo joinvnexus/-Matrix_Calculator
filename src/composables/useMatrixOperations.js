@@ -7,6 +7,7 @@ export function useMatrixOperations(props, emit) {
       emit('determinant', det)
     } catch (error) {
       console.error('Error calculating determinant:', error)
+      emit('error', 'Error calculating determinant: ' + error.message)
     }
   }
 
@@ -16,6 +17,7 @@ export function useMatrixOperations(props, emit) {
       emit('operation-result', result)
     } catch (error) {
       console.error('Error adding matrices:', error)
+      emit('error', 'Error adding matrices: ' + error.message)
     }
   }
 
@@ -25,6 +27,7 @@ export function useMatrixOperations(props, emit) {
       emit('operation-result', result)
     } catch (error) {
       console.error('Error subtracting matrices:', error)
+      emit('error', 'Error subtracting matrices: ' + error.message)
     }
   }
 
@@ -34,16 +37,19 @@ export function useMatrixOperations(props, emit) {
       emit('operation-result', result)
     } catch (error) {
       console.error('Error multiplying matrices:', error)
+      emit('error', 'Error multiplying matrices: ' + error.message)
     }
   }
 
   async function solveLinearEquations() {
     try {
       const b = math.matrix(props.vectorB.map(x => [x]))
-      const solution = math.lusolve(props.matrixA, b).toArray().flat()
+      const result = math.lusolve(props.matrixA, b)
+      const solution = result.toArray ? result.toArray().flat() : result.flat()
       emit('solution', solution)
     } catch (error) {
       console.error('Error solving equations:', error)
+      emit('error', 'Error solving equations: ' + error.message)
     }
   }
 
@@ -57,6 +63,7 @@ export function useMatrixOperations(props, emit) {
       emit('eigenvalues', eigenvalues)
     } catch (error) {
       console.error('Error calculating eigenvalues:', error)
+      emit('error', 'Error calculating eigenvalues: ' + error.message)
     }
   }
 
@@ -71,6 +78,7 @@ export function useMatrixOperations(props, emit) {
       emit('decomposition', { type: 'lu', data: lu })
     } catch (error) {
       console.error('Error performing LU decomposition:', error)
+      emit('error', 'Error performing LU decomposition: ' + error.message)
     }
   }
 
@@ -84,6 +92,7 @@ export function useMatrixOperations(props, emit) {
       emit('decomposition', { type: 'qr', data: qr })
     } catch (error) {
       console.error('Error performing QR decomposition:', error)
+      emit('error', 'Error performing QR decomposition: ' + error.message)
     }
   }
 
