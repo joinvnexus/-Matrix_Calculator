@@ -32,16 +32,15 @@ A comprehensive matrix calculator built with Vue.js and Math.js that performs va
 
 | Technology     | Description                          |
 |----------------|--------------------------------------|
-| [Vue.js](https://vuejs.org/)       | Progressive JavaScript framework |
-| [Math.js](https://mathjs.org/)     | Extensive math library           |
-| [Font Awesome](https://fontawesome.com/) | Icon library                   |
-| CSS (Flexbox & Grid) | Modern layout and styling         |
+| [Vue.js 3](https://vuejs.org/)     | Composition API & SFC architecture |
+| [Tailwind CSS](https://tailwindcss.com/) | Utility-first CSS framework |
+| [Math.js](https://mathjs.org/)     | Advanced mathematics library     |
+| [Font Awesome 7](https://fontawesome.com/) | Modern vector icons          |
+| [Playwright](https://playwright.dev/) | End-to-end testing suite         |
 
 ---
 
-## 📦 Installation & Cloning
-
-No installation required — it's a client-side app that runs directly in your browser.
+## 📦 Installation & Setup
 
 ### How to Clone This Repository
 
@@ -66,7 +65,7 @@ If you want to run the Matrix Calculator as a Vue.js project (with source code e
 
 3. **Start the development server**
    ```bash
-   npm run dev
+   npm run serve
    ```
 
 4. Open the local URL (usually `http://localhost:5173/` or shown in your terminal) in your browser.
